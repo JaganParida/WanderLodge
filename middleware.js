@@ -3,18 +3,17 @@ const { listingSchema, reviewSchema } = require("./schema.js");
 const ExpressError = require("./utils/ExpressError.js");
 const Review = require("./models/review.js");
 
-//check if the user is logged in
+// Check if the user is logged in
 module.exports.isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
-    // store the url they are requesting
     req.session.redirectUrl = req.originalUrl;
-    req.flash("error", "You must be logged in to to use this function");
+    req.flash("error", "You must be logged in to use this function");
     return res.redirect("/login");
   }
   next();
 };
 
-//save the redirect url
+// Save the redirect url
 module.exports.saveRedirectUrl = (req, res, next) => {
   if (req.session.redirectUrl) {
     res.locals.redirectUrl = req.session.redirectUrl;
@@ -22,10 +21,17 @@ module.exports.saveRedirectUrl = (req, res, next) => {
   next();
 };
 
-//check if the user is the owner of the listing
+// Check if the user is the owner of the listing (ADDED NULL CHECK)
 module.exports.isOwner = async (req, res, next) => {
   let { id } = req.params;
   const listing = await Listing.findById(id);
+
+  // If listing was deleted or doesn't exist, handle it safely
+  if (!listing) {
+    req.flash("error", "Listing not found!");
+    return res.redirect("/listings");
+  }
+
   if (!listing.owner.equals(res.locals.currentUser._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/listings/${id}`);
@@ -33,7 +39,7 @@ module.exports.isOwner = async (req, res, next) => {
   next();
 };
 
-//Handle error of listing
+// Handle error of listing
 module.exports.validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
   if (error) {
@@ -44,7 +50,7 @@ module.exports.validateListing = (req, res, next) => {
   }
 };
 
-//Handle error of review
+// Handle error of review
 module.exports.validateReview = (req, res, next) => {
   let { error } = reviewSchema.validate(req.body);
   if (error) {
@@ -55,10 +61,17 @@ module.exports.validateReview = (req, res, next) => {
   }
 };
 
-//check if the user is the owner of the review
+// Check if the user is the owner of the review (ADDED NULL CHECK)
 module.exports.isReviewAuthor = async (req, res, next) => {
   let { id, reviewId } = req.params;
   const review = await Review.findById(reviewId);
+
+  // Safety check if review exists
+  if (!review) {
+    req.flash("error", "Review not found!");
+    return res.redirect(`/listings/${id}`);
+  }
+
   if (!review.author.equals(res.locals.currentUser._id)) {
     req.flash("error", "You do not have permission to do that!");
     return res.redirect(`/listings/${id}`);
