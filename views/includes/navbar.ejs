@@ -1,44 +1,80 @@
 <link rel="stylesheet" href="/css/style.css">
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-lg sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/listings"><img src="logo.png" alt="logo"></a>
-        <div class="navbar-nav">
-            <a class="nav-link home" href="/listings">Explore WanderLodge</a>
-        </div>
-        <div class="navbar-nav ms-auto">
-            <form class="d-flex search-box" role="search">
-                <input class="form-control me-2 search-input" type="search" placeholder="Search Destination">
-                <button class="btn search-btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </form>
-        </div>
-        <div class="navbar-nav ms-auto">
-            <div class="createList"><a class="nav-link create-list" href="/listings/new">WanderLodge your home</a></div>
-            <div class="dropdown">
-                <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-bars"></i>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation"
-                        focusable="false" style="display: block; height: 100%; width: 100%; fill: currentcolor;">
-                        <path
-                            d="M16 .7C7.56.7.7 7.56.7 16S7.56 31.3 16 31.3 31.3 24.44 31.3 16 24.44.7 16 .7zm0 28c-4.02 0-7.6-1.88-9.93-4.81a12.43 12.43 0 0 1 6.45-4.4A6.5 6.5 0 0 1 9.5 14a6.5 6.5 0 0 1 13 0 6.51 6.51 0 0 1-3.02 5.5 12.42 12.42 0 0 1 6.45 4.4A12.67 12.67 0 0 1 16 28.7z">
-                        </path>
-                    </svg>
-                </button>
-                <ul class="dropdown-menu">
-                    <% if(!currentUser) { %>
-                        <li><a class="nav-link" href="/signup"><b>Sign Up</b></a></li>
-                        <li><a class="nav-link" href="/login"><b>Log in</b></a></li>
-                        <% } %>
-                            <% if(currentUser) { %>
-                                <li>&nbsp;Owner:
-                                    <b>
-                                        <%= currentUser.username %>
-                                    </b>
-                                </li>
-                                <li><a class="nav-link" href="/logout"><b>Log out</b></a></li>
-                                <% } %>
-                </ul>
-            </div>
+        <div class="navbar-left">
+            <a class="navbar-brand" href="/listings">
+                <img src="logo.png" alt="WanderLodge Logo">
+            </a>
+            <a class="nav-link home d-none d-md-inline-block" href="/listings">Explore WanderLodge</a>
         </div>
 
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-center">
+                <form class="search-box" role="search">
+                    <input class="search-input" type="search" placeholder="Search destinations..." aria-label="Search">
+                    <button class="search-btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="navbar-right">
+                <a class="nav-link create-list d-none d-md-inline-block" href="/listings/new">WanderLodge your home</a>
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false" aria-label="User menu">
+                        <i class="fa-solid fa-bars d-lg-none"></i>
+                        <svg class="d-none d-lg-block" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"
+                            aria-hidden="true" role="presentation" focusable="false"
+                            style="display: block; height: 100%; width: 100%; fill: currentcolor;">
+                            <path
+                                d="M16 .7C7.56.7.7 7.56.7 16S7.56 31.3 16 31.3 31.3 24.44 31.3 16 24.44.7 16 .7zm0 28c-4.02 0-7.6-1.88-9.93-4.81a12.43 12.43 0 0 1 6.45-4.4A6.5 6.5 0 0 1 9.5 14a6.5 6.5 0 0 1 13 0 6.51 6.51 0 0 1-3.02 5.5 12.42 12.42 0 0 1 6.45 4.4A12.67 12.67 0 0 1 16 28.7z">
+                            </path>
+                        </svg>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <% if(!currentUser) { %>
+                            <li><a class="dropdown-item" href="/signup"><b>Sign Up</b></a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/login"><b>Log In</b></a></li>
+                            <% } %>
+                                <% if(currentUser) { %>
+                                    <li>
+                                        <div class="dropdown-item-text">
+                                            <small class="text-muted d-block">Signed in as</small>
+                                            <strong>
+                                                <%= currentUser.username %>
+                                            </strong>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li class="d-md-none">
+                                        <a class="dropdown-item" href="/listings">
+                                            <i class="fa-solid fa-compass me-2"></i>Explore WanderLodge
+                                        </a>
+                                    </li>
+                                    <li class="d-md-none">
+                                        <a class="dropdown-item" href="/listings/new">
+                                            <i class="fa-solid fa-plus me-2"></i>WanderLodge your home
+                                        </a>
+                                    </li>
+                                    <li class="d-md-none">
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="/logout"><b>Log Out</b></a></li>
+                                    <% } %>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>

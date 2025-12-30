@@ -1,94 +1,78 @@
 <% layout("/layouts/boilerplate") %>
     <div class="choose">
         <div id="filterList">
-            <div class="icon"><i id="left" class="fa-solid fa-angle-left"></i></div>
+            <div class="icon"><i id="left" class="fa-solid fa-chevron-left"></i></div>
             <div id="filters">
                 <div class="filter">
-                    <div><i class="fa-solid fa-fire"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-fire"></i></div>
                     <p>Trending</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-mountain-city"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-mountain-city"></i></div>
                     <p>Iconic Cities</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-bed"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-bed"></i></div>
                     <p>Rooms</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-mountain"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-mountain"></i></div>
                     <p>Mountains</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-brands fa-fort-awesome"></i></div>
-                    <p>Castels</p>
+                    <div class="filter-icon"><i class="fa-brands fa-fort-awesome"></i></div>
+                    <p>Castles</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-person-swimming"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-person-swimming"></i></div>
                     <p>Amazing Pools</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-campground"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-campground"></i></div>
                     <p>Camping</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-tractor"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-tractor"></i></div>
                     <p>Farms</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-snowflake"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-snowflake"></i></div>
                     <p>Arctic</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-igloo"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-igloo"></i></div>
                     <p>Domes</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-ship"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-ship"></i></div>
                     <p>Boats</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-mug-hot"></i></div>
                     <p>Bed & breakfast</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-city"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-city"></i></div>
                     <p>Top cities</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-palette"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-palette"></i></div>
                     <p>Creative spaces</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-kitchen-set"></i></div>
-                    <p>Chef kitchen's</p>
+                    <div class="filter-icon"><i class="fa-solid fa-kitchen-set"></i></div>
+                    <p>Chef kitchens</p>
                 </div>
                 <div class="filter">
-                    <div><i class="fa-solid fa-umbrella"></i></div>
+                    <div class="filter-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
                     <p>Beach</p>
                 </div>
-                <div class="filter">
-                    <div><i class="fa-solid fa-ship"></i></div>
-                    <p>Boats</p>
-                </div>
-                <div class="filter">
-                    <div><i class="fa-solid fa-snowflake"></i></div>
-                    <p>Arctic</p>
-                </div>
-                <div class="filter">
-                    <div><i class="fa-solid fa-igloo"></i></div>
-                    <p>Domes</p>
-                </div>
-                <div class="filter">
-                    <div><i class="fa-solid fa-ship"></i></div>
-                    <p>Boats</p>
-                </div>
             </div>
-            <div class="icon"><i id="right" class="fa-solid fa-angle-right"></i></div>
+            <div class="icon"><i id="right" class="fa-solid fa-chevron-right"></i></div>
         </div>
         <div class="another">
-            <div id="filterby">
-                Filters
+            <button id="filterby" type="button">
+                <span class="filter-text">Filters</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true" role="presentation"
                     focusable="false"
                     style="display: block; fill: none; height: 16px; width: 16px; stroke: currentcolor; stroke-width: 3; overflow: visible;">
@@ -96,7 +80,7 @@
                         d="M7 16H3m26 0H15M29 6h-4m-8 0H3m26 20h-4M7 16a4 4 0 1 0 8 0 4 4 0 0 0-8 0zM17 6a4 4 0 1 0 8 0 4 4 0 0 0-8 0zm0 20a4 4 0 1 0 8 0 4 4 0 0 0-8 0zm0 0H3">
                     </path>
                 </svg>
-            </div>
+            </button>
             <div class="tax-toggle">
                 <div class="form-check-reverse form-switch">
                     <label class="form-check-label" for="flexSwitchCheckDefault">Display total after Taxes</label>
@@ -104,28 +88,30 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-    <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1 mt-3">
+    <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-4 mb-5">
         <% for(let listing of allListings) { %>
-            <a href="/listings/<%= listing.id  %>" class="listing-link">
-                <div class="card listing-card">
-                    <img src=" <%=listing.image.url %>" class="card-img-top" alt="listing image" style="height:17rem">
-                    <div class="card-img-overlay"></div>
-                    <div class="card-body">
-                        <p class="card-text">
-                            <b>
+            <div class="col">
+                <a href="/listings/<%= listing.id  %>" class="listing-link">
+                    <div class="listing-card">
+                        <div class="card-img-wrapper">
+                            <img src="<%=listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
                                 <%= listing.title %>
-                            </b> <br>
-                            &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+                            </h5>
+                            <p class="card-location">
+                                <%= listing.location %>
+                            </p>
+                            <div class="card-price-wrapper">
+                                <span class="card-price">&#8377;<%= listing.price.toLocaleString("en-IN") %></span>
+                                <span class="card-price-unit">/ night</span>
                                 <i class="tax-info">&nbsp; +18% GST</i>
-                        </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
             <% } %>
     </div>
-    <script>
-
-    </script>

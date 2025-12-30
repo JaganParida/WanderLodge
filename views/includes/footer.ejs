@@ -1,16 +1,36 @@
-<footer>
+<footer class="mt-5">
     <div class="f-info">
         <div class="f-info-socials">
-            <i class="fa-brands fa-square-facebook"></i>
-            <i class="fa-brands fa-square-instagram"></i>
-            <i class="fa-brands fa-linkedin"></i>
-            <i class="fa-brands fa-twitter"></i>
+            <a href="#" aria-label="Facebook" class="social-link">
+                <i class="fa-brands fa-square-facebook"></i>
+            </a>
+            <a href="#" aria-label="Instagram" class="social-link">
+                <i class="fa-brands fa-square-instagram"></i>
+            </a>
+            <a href="#" aria-label="LinkedIn" class="social-link">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+            <a href="#" aria-label="Twitter" class="social-link">
+                <i class="fa-brands fa-square-twitter"></i>
+            </a>
         </div>
-        <div class="f-info-brand">&copy; WanderLodge Private Limited</div>
+        <div class="f-info-brand">
+            <i class="fa-solid fa-copyright me-1"></i>
+            <span id="current-year"></span> WanderLodge Private Limited. All rights reserved.
+        </div>
         <div class="f-info-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
+            <a href="/privacy">
+                <i class="fa-solid fa-shield-halved me-1"></i>Privacy Policy
+            </a>
+            <a href="/terms">
+                <i class="fa-solid fa-file-contract me-1"></i>Terms of Service
+            </a>
+            <a href="/listings">
+                <i class="fa-solid fa-home me-1"></i>Browse Listings
+            </a>
         </div>
     </div>
-
 </footer>
+<script>
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
