@@ -1280,8 +1280,40 @@ footer {
 .valid-feedback {
   font-size: 13px;
   margin-top: 4px;
-  display: block;
+  display: none;
   line-height: 1.4;
+}
+
+/* Show invalid feedback when input is invalid and form is validated */
+.was-validated .form-control:invalid ~ .invalid-feedback,
+.was-validated .form-select:invalid ~ .invalid-feedback,
+.form-control.is-invalid ~ .invalid-feedback,
+.form-select.is-invalid ~ .invalid-feedback {
+  display: block;
+}
+
+/* Show valid feedback when input is valid and form is validated */
+.was-validated .form-control:valid ~ .valid-feedback,
+.was-validated .form-select:valid ~ .valid-feedback,
+.form-control.is-valid ~ .valid-feedback,
+.form-select.is-valid ~ .valid-feedback {
+  display: block;
+}
+
+/* Handle input-group case where feedback is inside mb-4 container */
+.was-validated .mb-4:has(.input-group .form-control:invalid) .invalid-feedback,
+.mb-4:has(.input-group .form-control.is-invalid) .invalid-feedback {
+  display: block;
+}
+
+.was-validated .mb-4:has(.input-group .form-control:valid) .valid-feedback,
+.mb-4:has(.input-group .form-control.is-valid) .valid-feedback {
+  display: block;
+}
+
+.was-validated .mb-4:has(.input-group .form-control:valid) .valid-feedback,
+.mb-4:has(.input-group .form-control.is-valid) .valid-feedback {
+  display: block;
 }
 
 /* ===== ERROR PAGE ===== */
