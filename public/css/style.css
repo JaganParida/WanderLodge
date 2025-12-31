@@ -163,7 +163,7 @@ body {
 
 /* Dropdown */
 .dropdown {
-  padding: 5px 5px 5px 12px;
+  padding: 5px;
   border: 1px solid var(--border);
   border-radius: 21px;
   height: 42px;
@@ -446,6 +446,21 @@ footer {
   font-weight: 400;
 }
 
+.card-owner {
+  font-size: 14px;
+  color: var(--text-light);
+  margin: 6px 0 0 0;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-owner i {
+  font-size: 12px;
+  color: var(--primary);
+}
+
 .card-price-wrapper {
   display: flex;
   align-items: baseline;
@@ -626,7 +641,7 @@ footer {
 
 .tax-toggle {
   height: 48px;
-  padding: 0 20px;
+  padding: 0 55px 0px 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   display: flex;
@@ -634,6 +649,8 @@ footer {
   background: var(--bg);
   cursor: pointer;
   transition: var(--transition);
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .tax-toggle:hover {
@@ -641,16 +658,41 @@ footer {
   border-color: var(--border-hover);
 }
 
+.tax-toggle .form-check-reverse {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  gap: 12px;
+}
+
 .tax-toggle label {
   font-size: 14px;
   font-weight: 600;
   color: var(--text);
-  margin: 0 12px 0 0;
+  margin: 0;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .form-switch.form-check-reverse {
   padding-right: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.tax-toggle .form-check-input {
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  margin: 0;
+  flex-shrink: 0;
 }
 
 .form-switch .form-check-input {
@@ -686,6 +728,18 @@ footer {
 
 .listing-meta i {
   color: var(--text-light);
+}
+
+.listing-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-light);
+}
+
+.listing-owner i {
+  color: var(--primary);
+  font-size: 13px;
 }
 
 .show-image-container {
@@ -1648,10 +1702,16 @@ footer {
   .tax-toggle {
     height: 44px;
     padding: 0 16px;
+    overflow: hidden;
   }
 
   .tax-toggle label {
     font-size: 13px;
+  }
+
+  .tax-toggle .form-check-input {
+    width: 40px;
+    height: 22px;
   }
 
   /* Listings */

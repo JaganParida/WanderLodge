@@ -15,6 +15,12 @@
                         <i class="fa-solid fa-location-dot"></i>
                         <%= listing.location %>, <%= listing.country %>
                     </span>
+                    <% if(listing.owner) { %>
+                        <span class="listing-owner">
+                            <i class="fa-solid fa-user"></i>
+                            Owned by <%= listing.owner.username %>
+                        </span>
+                        <% } %>
                 </div>
             </div>
         </div>

@@ -83,7 +83,7 @@
             </button>
             <div class="tax-toggle">
                 <div class="form-check-reverse form-switch">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Display total after Taxes</label>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Display total price after taxes</label>
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                 </div>
             </div>
@@ -104,11 +104,18 @@
                             <p class="card-location">
                                 <%= listing.location %>
                             </p>
-                            <div class="card-price-wrapper">
-                                <span class="card-price">&#8377;<%= listing.price.toLocaleString("en-IN") %></span>
-                                <span class="card-price-unit">/ night</span>
-                                <i class="tax-info">&nbsp; +18% GST</i>
-                            </div>
+                            <% if(listing.owner) { %>
+                                <p class="card-owner">
+                                    <i class="fa-solid fa-user"></i>
+                                    Owned by <%= listing.owner.username %>
+                                </p>
+                                <% } %>
+                                    <div class="card-price-wrapper">
+                                        <span class="card-price">&#8377;<%= listing.price.toLocaleString("en-IN") %>
+                                                </span>
+                                        <span class="card-price-unit">/ night</span>
+                                        <i class="tax-info">&nbsp; +18% GST</i>
+                                    </div>
                         </div>
                     </div>
                 </a>
