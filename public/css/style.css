@@ -1689,7 +1689,7 @@ footer {
 
   .dropdown {
     height: 38px;
-    padding: 3px 3px 3px 8px;
+    padding: 0px 20px;
   }
 
   .dropdown-toggle i {
