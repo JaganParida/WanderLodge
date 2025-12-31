@@ -1,30 +1,39 @@
 <% layout("/layouts/boilerplate") %>
-    <div class="auth-container">
-        <div class="row justify-content-center align-items-center min-vh-100">
-            <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+    <div class="auth-page-wrapper">
+        <div class="auth-container">
+            <div class="auth-content">
                 <div class="auth-card">
-                    <div class="auth-header text-center mb-4">
-                        <h2 class="auth-title">Welcome Back</h2>
-                        <p class="text-muted">Login to your WanderLodge account</p>
+                    <div class="auth-header">
+                        <h1 class="auth-title">Welcome Back</h1>
+                        <p class="auth-subtitle">Login to your WanderLodge account</p>
                     </div>
-                    <form action="/login" method="POST" class="needs-validation" novalidate>
-                        <div class="mb-4">
+                    <form action="/login" method="POST" class="auth-form needs-validation" novalidate>
+                        <div class="form-group">
                             <label for="username" class="form-label">Username</label>
-                            <input name="username" id="username" type="text" class="form-control form-control-lg"
-                                placeholder="Enter your username" required />
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <input name="username" id="username" type="text" class="form-control auth-input"
+                                    placeholder="Enter your username" required />
+                            </div>
                             <div class="invalid-feedback">Please enter your username</div>
                         </div>
-                        <div class="mb-4">
+                        <div class="form-group">
                             <label for="password" class="form-label">Password</label>
-                            <input name="password" id="password" type="password" class="form-control form-control-lg"
-                                placeholder="Enter your password" required />
+                            <div class="input-wrapper">
+                                <div class="input-icon">
+                                    <i class="fa-solid fa-lock"></i>
+                                </div>
+                                <input name="password" id="password" type="password" class="form-control auth-input"
+                                    placeholder="Enter your password" required />
+                            </div>
                             <div class="invalid-feedback">Please enter your password</div>
                         </div>
-                        <div class="d-grid mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">Login</button>
-                        </div>
-                        <div class="text-center">
-                            <p class="mb-0">Don't have an account?
+                        <button type="submit" class="auth-btn">Login</button>
+                        <div class="auth-footer">
+                            <p class="auth-footer-text">
+                                Don't have an account?
                                 <a href="/signup" class="auth-link">Sign up here</a>
                             </p>
                         </div>
