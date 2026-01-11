@@ -117,3 +117,33 @@ filters.style.scrollBehavior = "auto";
 window.addEventListener("load", function () {
   document.getElementById("preloader").style.display = "none";
 });
+
+/*search input clear redirect*/
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.querySelector(".search-input");
+  const searchForm = document.querySelector(".search-box");
+
+  if (searchInput && searchForm) {
+    let previousValue = searchInput.value.trim();
+
+    // Listen for input changes
+    searchInput.addEventListener("input", function () {
+      const currentValue = this.value.trim();
+
+      // If input is cleared and it previously had a value, redirect
+      if (currentValue === "" && previousValue !== "") {
+        window.location.href = "/listings";
+      }
+
+      previousValue = currentValue;
+    });
+
+    // Also handle form submission - if empty, redirect to /listings without search param
+    searchForm.addEventListener("submit", function (e) {
+      if (searchInput.value.trim() === "") {
+        e.preventDefault();
+        window.location.href = "/listings";
+      }
+    });
+  }
+});
