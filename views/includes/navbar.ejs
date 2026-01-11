@@ -15,8 +15,10 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-center">
-                <form class="search-box" role="search">
-                    <input class="search-input" type="search" placeholder="Search destinations..." aria-label="Search">
+                <form class="search-box" role="search" method="GET" action="/listings">
+                    <input class="search-input" type="search" name="search"
+                        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                        placeholder="Search destinations..." aria-label="Search">
                     <button class="search-btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
