@@ -20,6 +20,7 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const homeController = require("./controllers/home.js");
 
 //database connection
 const dbUrl = process.env.ATLASDB_URL;
@@ -92,10 +93,8 @@ app.use((req, res, next) => {
 });
 
 //use the simple path
-// Redirect root "/" to "/listings"
-app.get("/", (req, res) => {
-  res.redirect("/listings");
-});
+// Home Route - Modern Landing Page
+app.get("/", homeController.home);
 
 // Routes
 app.use("/listings", listingRouter);
@@ -105,7 +104,10 @@ app.use("/", userRouter);
 // 404 Error Handler (Keep this at the end)
 app.use((req, res, next) => {
   next(
-    new ExpressError(404, "Page Not Found! To view Click on Explore WanderLodge")
+    new ExpressError(
+      404,
+      "Page Not Found! To view Click on Explore WanderLodge"
+    )
   );
 });
 
