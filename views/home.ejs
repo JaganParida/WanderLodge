@@ -1,0 +1,145 @@
+<% layout("/layouts/boilerplate") %>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Find your next adventure</h1>
+            <p class="hero-subtitle">Discover unique stays and experiences around the world</p>
+
+            <!-- Enhanced Search Box in Hero -->
+            <form class="hero-search-box" method="GET" action="/listings">
+                <div class="hero-search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input class="hero-search-input" type="search" name="search" placeholder="Where do you want to go?"
+                        aria-label="Search destinations">
+                    <button class="hero-search-btn" type="submit">
+                        <span>Search</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Filters -->
+            <div class="hero-quick-filters">
+                <a href="/listings" class="quick-filter-item">
+                    <i class="fa-solid fa-fire"></i>
+                    <span>Trending</span>
+                </a>
+                <a href="/listings" class="quick-filter-item">
+                    <i class="fa-solid fa-mountain-city"></i>
+                    <span>Cities</span>
+                </a>
+                <a href="/listings" class="quick-filter-item">
+                    <i class="fa-solid fa-umbrella-beach"></i>
+                    <span>Beach</span>
+                </a>
+                <a href="/listings" class="quick-filter-item">
+                    <i class="fa-solid fa-mountain"></i>
+                    <span>Mountains</span>
+                </a>
+                <a href="/listings" class="quick-filter-item">
+                    <i class="fa-solid fa-campground"></i>
+                    <span>Camping</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Listings Section -->
+    <section class="featured-section">
+        <div class="section-header">
+            <h2 class="section-title">Explore WanderLodge</h2>
+            <p class="section-subtitle">Discover amazing places to stay around the world</p>
+            <a href="/listings" class="view-all-btn">
+                <span>View All Listings</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Featured Listings Grid -->
+        <% if(featuredListings && featuredListings.length> 0) { %>
+            <div class="featured-listings-grid">
+                <% for(let listing of featuredListings) { %>
+                    <a href="/listings/<%= listing.id %>" class="featured-listing-card">
+                        <div class="featured-card-image">
+                            <img src="<%= listing.image.url %>" alt="<%= listing.title %>">
+                            <div class="featured-card-overlay">
+                                <div class="featured-card-info">
+                                    <p class="featured-location">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <%= listing.location %>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="featured-card-body">
+                            <h3 class="featured-card-title">
+                                <%= listing.title %>
+                            </h3>
+                            <div class="featured-card-footer">
+                                <div class="featured-price">
+                                    <span class="price-amount">&#8377;<%= listing.price.toLocaleString("en-IN") %>
+                                    </span>
+                                    <span class="price-unit">/ night</span>
+                                </div>
+                                <div class="featured-owner">
+                                    <i class="fa-solid fa-user"></i>
+                                    <% if(listing.owner) { %>
+                                        <span>
+                                            <%= listing.owner.username %>
+                                        </span>
+                                        <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <% } %>
+            </div>
+            <% } else { %>
+                <div class="no-listings">
+                    <i class="fa-solid fa-home"></i>
+                    <h3>No listings yet</h3>
+                    <p>Be the first to create a listing!</p>
+                    <% if(currentUser) { %>
+                        <a href="/listings/new" class="cta-button">
+                            <span>Create Listing</span>
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                        <% } else { %>
+                            <a href="/signup" class="cta-button">
+                                <span>Sign Up to Start</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <% } %>
+                </div>
+                <% } %>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2 class="cta-title">Ready to start your journey?</h2>
+            <p class="cta-subtitle">Join thousands of travelers discovering amazing places to stay</p>
+            <div class="cta-buttons">
+                <% if(!currentUser) { %>
+                    <a href="/signup" class="cta-primary">
+                        <span>Get Started</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="/listings" class="cta-secondary">
+                        <span>Explore Listings</span>
+                        <i class="fa-solid fa-compass"></i>
+                    </a>
+                    <% } else { %>
+                        <a href="/listings/new" class="cta-primary">
+                            <span>Create Listing</span>
+                            <i class="fa-solid fa-plus"></i>
+                        </a>
+                        <a href="/listings" class="cta-secondary">
+                            <span>Explore All</span>
+                            <i class="fa-solid fa-compass"></i>
+                        </a>
+                        <% } %>
+            </div>
+        </div>
+    </section>
