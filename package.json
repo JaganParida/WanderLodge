@@ -5,10 +5,10 @@
   "name": "airbnb_clone",
   "version": "1.0.0",
   "description": "Welcome to **WanderLodge**, a full-stack web application inspired by **Airbnb**.",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
