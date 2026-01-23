@@ -1,13 +1,14 @@
 {
   "engines": {
-    "node": "20.18.0"
+    "node": "20.x"
   },
   "name": "airbnb_clone",
   "version": "1.0.0",
-  "description": "Welcome to **WanderLodge**, a full-stack web application inspired by **Airbnb**. This platform allows users to explore, create, review, and manage lodging listings. Built using **HTML, CSS, JavaScript, MongoDB, Node.js, Express.js, EJS, and Bootstrap**, it provides a seamless experience for travelers and hosts alike. Additionally, **Cloudinary** is used for image storage, and **Mapbox** is integrated to display locations on an interactive map.",
+  "description": "Welcome to **WanderLodge**, a full-stack web application inspired by **Airbnb**.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",

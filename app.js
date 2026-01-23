@@ -106,8 +106,8 @@ app.use((req, res, next) => {
   next(
     new ExpressError(
       404,
-      "Page Not Found! To view Click on Explore WanderLodge"
-    )
+      "Page Not Found! To view Click on Explore WanderLodge",
+    ),
   );
 });
 
