@@ -24,8 +24,9 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Plus Jakarta Sans",
+    "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   display: flex;
@@ -2203,7 +2204,11 @@ footer {
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    var(--primary-dark) 100%
+  );
   padding: 120px 0 80px;
   margin: 0 -40px 0 -40px;
   position: relative;
@@ -2212,7 +2217,7 @@ footer {
 }
 
 .hero-section::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -2596,6 +2601,7 @@ footer {
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
+  margin: 0px 16px;
 }
 
 .cta-button,
@@ -2692,6 +2698,7 @@ footer {
   .hero-search-wrapper {
     flex-direction: column;
     padding: 16px;
+    margin: 0px 16px;
   }
 
   .hero-search-input {
