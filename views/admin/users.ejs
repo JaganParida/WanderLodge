@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Management - WanderLodge Admin</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+      }
+
+      .admin-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .admin-header {
+        margin-bottom: 2rem;
+      }
+
+      .admin-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .section {
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .section-header h2 {
+        font-size: 1.3rem;
+        font-weight: 600;
+      }
+
+      .admin-nav {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .nav-btn {
+        padding: 0.75rem 1.5rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-btn:hover,
+      .nav-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .table th {
+        background: var(--bg-secondary);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .table tr:hover {
+        background: var(--bg-secondary);
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+
+      .status-user {
+        background: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+      }
+
+      .status-host {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+      }
+
+      .status-admin {
+        background: rgba(249, 115, 22, 0.1);
+        color: #ea580c;
+      }
+
+      .status-active {
+        background: rgba(34, 197, 94, 0.1);
+        color: #16a34a;
+      }
+
+      .status-inactive {
+        background: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+      }
+
+      .status-banned {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+      }
+
+      .action-btn {
+        padding: 0.5rem 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        margin-right: 0.5rem;
+      }
+
+      .action-btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .action-btn-danger {
+        background: #ef4444;
+      }
+
+      .action-btn-danger:hover {
+        background: #dc2626;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .pagination a,
+      .pagination span {
+        padding: 0.5rem 0.75rem;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .pagination a:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .pagination .active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: var(--bg-primary);
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 90%;
+      }
+
+      .modal-header {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        font-family: inherit;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+      }
+
+      .btn-secondary:hover {
+        background: var(--border-color);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+      }
+
+      .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+      }
+
+      @media (max-width: 768px) {
+        .admin-container {
+          padding: 1rem;
+        }
+
+        .admin-header h1 {
+          font-size: 1.5rem;
+        }
+
+        .section-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1rem;
+        }
+
+        .table {
+          font-size: 0.9rem;
+        }
+
+        .table th,
+        .table td {
+          padding: 0.75rem;
+        }
+
+        .action-btn {
+          padding: 0.4rem 0.75rem;
+          font-size: 0.75rem;
+        }
+
+        .admin-nav {
+          flex-direction: column;
+        }
+
+        .nav-btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <%- include("../includes/navbar.ejs") %>
+
+    <main>
+      <div class="admin-container">
+        <%- include("../includes/flash.ejs") %>
+
+        <div class="admin-header">
+          <h1><i class="fas fa-users"></i> User Management</h1>
+        </div>
+
+        <div class="admin-nav">
+          <a href="/admin" class="nav-btn">
+            <i class="fas fa-dashboard"></i> Dashboard
+          </a>
+          <a href="/admin/users" class="nav-btn active">
+            <i class="fas fa-users"></i> Users
+          </a>
+          <a href="/admin/listings" class="nav-btn">
+            <i class="fas fa-home"></i> Listings
+          </a>
+          <a href="/admin/reports" class="nav-btn">
+            <i class="fas fa-flag"></i> Reports
+          </a>
+          <a href="/admin/analytics" class="nav-btn">
+            <i class="fas fa-chart-bar"></i> Analytics
+          </a>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <h2>Total Users: <%= totalUsers %></h2>
+          </div>
+
+          <% if (users.length > 0) { %>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><strong><%= user.username %></strong></td>
+                    <td><%= user.email %></td>
+                    <td>
+                      <span class="status-badge status-<%= user.role %>">
+                        <%= user.role %>
+                      </span>
+                    </td>
+                    <td>
+                      <span
+                        class="status-badge status-<%= user.isBanned ? 'banned' : (user.isActive ? 'active' : 'inactive') %>"
+                      >
+                        <%= user.isBanned ? 'Banned' : (user.isActive ? 'Active' : 'Inactive') %>
+                      </span>
+                    </td>
+                    <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <% if (user.isBanned) { %>
+                        <form
+                          action="/admin/unban-user/<%= user._id %>"
+                          method="POST"
+                          style="display: inline"
+                        >
+                          <button type="submit" class="action-btn">
+                            <i class="fas fa-check"></i> Unban
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <button
+                          class="action-btn action-btn-danger"
+                          onclick="openBanModal('<%= user._id %>', '<%= user.username %>')"
+                        >
+                          <i class="fas fa-ban"></i> Ban
+                        </button>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+
+            <div class="pagination">
+              <% if (currentPage > 1) { %>
+                <a href="/admin/users?page=1">First</a>
+                <a href="/admin/users?page=<%= currentPage - 1 %>">Previous</a>
+              <% } %>
+
+              <% for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) { %>
+                <% if (i === currentPage) { %>
+                  <span class="active"><%= i %></span>
+                <% } else { %>
+                  <a href="/admin/users?page=<%= i %>"><%= i %></a>
+                <% } %>
+              <% } %>
+
+              <% if (currentPage < totalPages) { %>
+                <a href="/admin/users?page=<%= currentPage + 1 %>">Next</a>
+                <a href="/admin/users?page=<%= totalPages %>">Last</a>
+              <% } %>
+            </div>
+          <% } else { %>
+            <div class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No users found</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </main>
+
+    <div id="banModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">Ban User</div>
+        <form id="banForm" method="POST">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" id="modalUsername" readonly />
+          </div>
+          <div class="form-group">
+            <label>Reason for banning</label>
+            <textarea
+              name="reason"
+              placeholder="Provide a reason for this action..."
+              required
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Confirm Ban</button>
+            <button type="button" class="btn btn-secondary" onclick="closeBanModal()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <%- include("../includes/footer.ejs") %>
+    <script src="/js/main.js"></script>
+    <script src="/js/theme.js"></script>
+
+    <script>
+      function openBanModal(userId, username) {
+        document.getElementById("modalUsername").value = username;
+        document.getElementById("banForm").action = `/admin/ban-user/${userId}`;
+        document.getElementById("banModal").classList.add("active");
+      }
+
+      function closeBanModal() {
+        document.getElementById("banModal").classList.remove("active");
+      }
+
+      document.getElementById("banModal").addEventListener("click", (e) => {
+        if (e.target.id === "banModal") {
+          closeBanModal();
+        }
+      });
+    </script>
+  </body>
+</html>
