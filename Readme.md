@@ -1,45 +1,56 @@
-# WanderLodge - Full-Stack Web Application
+# WanderLodge
 
-Welcome to **WanderLodge**, a full-stack web application inspired by **Airbnb**. This platform allows users to explore, create, review, and manage lodging listings. Built using **HTML, CSS, JavaScript, MongoDB, Node.js, Express.js, EJS, and Bootstrap**, it provides a seamless experience for travelers and hosts alike. Additionally, **Cloudinary** is used for image storage, and **Mapbox** is integrated to display locations on an interactive map.
+Welcome to **WanderLodge**, a premium, full-stack vacation rental platform that connects travelers with extraordinary properties worldwide. Designed with top-tier UI/UX, seamless booking flows, and powerful host analytics, this platform delivers an end-to-end luxury hospitality experience.
 
-## 🚀 Features
+## 🛑 Copyright & Usage Notice
+**STRICTLY CONFIDENTIAL AND PROPRIETARY**
+Forking, cloning, copying, or distributing this repository in any form is **strictly prohibited**. All rights reserved.
 
-- **User Authentication**: Secure login and registration system.
-- **Lodging Management**: Users can **create, edit, and delete** their listings.
-- **Reviews & Ratings**: Users can **post, edit, and delete reviews** for lodgings with your account.
-- **Image Uploads**: Integrated with **Cloudinary** for storing and managing images.
-- **Interactive Maps**: Utilizes **Mapbox** for displaying locations dynamically.
-- **Responsive Design**: Built with **Bootstrap** for a user-friendly experience across all devices.
+---
 
-## 📂 Project Setup
+## 🌟 Platform Features
 
-1. Clone the repository:
-   ```sh
-   git clone https://github.com/JaganParida/WanderLodge.git
-   cd WanderLodge
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Set up environment variables in a `.env` file:
-   ```env
-   CLOUD_NAME=your_cloudinary_name
-   CLOUD_API_KEY=your_cloudinary_api_key
-   CLOUD_API_SECRET=your_api_secret
-   MAP_TOKEN=your_mapbox_token
-   ATLASDB_URL=your_mongodbAtlas_url
-   SECRET=your_secret_code_for_session
-   ```
-4. Start the server:
-   ```sh
-   node app.js
-   ```
-5. Open your browser and visit:
-   ```sh
-   http://localhost:8080/listings
-   ```
+### 🤵 For Users (Travelers)
+* **Discover Unique Stays**: Browse properties globally with interactive mapping (Leaflet/OpenStreetMap).
+* **Smart Category Filters**: Explore niche categories like Beachfront, Castles, Tiny Homes, and Trending.
+* **WanderLodge AI Concierge**: Built-in intelligent chatbot assistant to help guests find properties, answer questions, and provide immediate support anywhere on the platform.
+* **Dynamic Pricing Engine**: Accurate, real-time pricing calculated dynamically per-guest, per-night, inclusive of taxes and service fees.
+* **Instant Booking System**: Select available dates, specify guests (respecting property capacity), and lock in reservations.
+* **Digital Tickets & Invoices**: Access aesthetic, print-ready digital boarding passes (PNG) and professional invoices (PDF) directly from the user dashboard.
+* **Wishlist Management**: Save favorite properties to revisit later.
+* **Review & Rating System**: Leave reviews, rate stays, and view verified feedback from other guests.
+* **User Dashboard**: A central hub to manage upcoming trips, past bookings, and account settings.
 
-##
+### 🏠 For Hosts
+* **Comprehensive Analytics Dashboard**: Visualize property performance, total revenue, and booking trends through interactive charts and graphs.
+* **Property Management**: Effortlessly create, update, or delete property listings. Upload high-quality images and manage amenities.
+* **Reservation Control**: Full autonomy to Accept or Reject incoming booking requests.
+* **Automated Calendar Management**: Dates are automatically blocked off once a booking is confirmed, preventing double-bookings.
+* **Custom Confirmations**: Secure, custom-built confirmation modals replace native browser alerts for a premium feel.
+* **Host Profile Setup**: Manage host identity to build trust with potential guests.
 
-Thank you for checking out **WanderLodge**! 🚀
+---
+
+## 🛠️ Technology Stack
+
+**Frontend**
+* **React + Vite**: Lightning-fast UI rendering and module bundling.
+* **Tailwind CSS**: Modern, utility-first styling for a sleek, responsive, and highly aesthetic design.
+* **Lucide React**: Premium icon set for consistent visual language.
+* **html2canvas & jsPDF**: Client-side generation of high-quality downloadable tickets and invoices.
+* **Recharts**: Responsive charting library for host analytics.
+
+**Backend**
+* **Node.js & Express.js**: Robust API architecture.
+* **MongoDB & Mongoose**: Flexible, schema-based NoSQL database for managing listings, users, and bookings.
+* **JWT Authentication**: Secure, token-based user sessions.
+
+---
+
+## 🚀 Architectural Highlights
+* **Responsive Layouts**: 100% mobile, tablet, and desktop friendly without layout breaks.
+* **Optimized Image Handling**: Cross-origin anonymous image loading ensures stable PDF/Ticket exports.
+* **State Management**: Complex, asynchronous React state handling using `useMemo`, `useEffect`, and Context API for peak performance.
+
+---
+*© WanderLodge Inc. All Rights Reserved.*

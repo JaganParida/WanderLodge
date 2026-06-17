@@ -1,0 +1,148 @@
+<% layout("/layouts/boilerplate") %>
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card border rounded shadow-sm text-center p-4">
+                <div class="mb-3">
+                    <div class="bg-indigo-subtle text-indigo rounded-circle d-inline-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px; font-size: 2.5rem;">
+                        <%= user.username.charAt(0).toUpperCase() %>
+                    </div>
+                </div>
+                <h3 class="fw-bold mb-1"><%= user.username %></h3>
+                <p class="text-muted"><%= user.email %></p>
+                <div class="d-grid mt-3">
+                    <a href="/listings/new" class="btn btn-primary fw-bold">Become a Host</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active text-dark fw-bold" id="trips-tab" data-bs-toggle="tab" data-bs-target="#trips" type="button" role="tab">My Trips</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark fw-bold" id="wishlist-tab" data-bs-toggle="tab" data-bs-target="#wishlist" type="button" role="tab">Wishlist</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link text-dark fw-bold" id="hosting-tab" data-bs-toggle="tab" data-bs-target="#hosting" type="button" role="tab">My Listings</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="dashboardTabsContent">
+                <!-- My Trips Tab -->
+                <div class="tab-pane fade show active" id="trips" role="tabpanel">
+                    <% if (myBookings && myBookings.length > 0) { %>
+                        <div class="row row-cols-1 g-3">
+                            <% for (let booking of myBookings) { %>
+                                <div class="col">
+                                    <div class="card border rounded shadow-sm d-flex flex-md-row">
+                                        <% if (booking.listing && booking.listing.image && booking.listing.image.url) { %>
+                                            <img src="<%= booking.listing.image.url %>" class="img-fluid rounded-start" alt="Listing Image" style="width: 200px; object-fit: cover;">
+                                        <% } else { %>
+                                            <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded-start" style="width: 200px;">No Image</div>
+                                        <% } %>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title fw-bold text-main mb-1"><%= booking.listing ? booking.listing.title : 'Deleted Listing' %></h5>
+                                                <span class="badge bg-<%= booking.status === 'Confirmed' ? 'success' : 'warning' %>"><%= booking.status %></span>
+                                            </div>
+                                            <p class="card-text text-muted small mb-2"><i class="fa-solid fa-location-dot text-pink me-1"></i><%= booking.listing ? booking.listing.location : 'N/A' %></p>
+                                            <p class="card-text mb-1"><strong>Dates:</strong> <%= booking.checkIn.toLocaleDateString() %> - <%= booking.checkOut.toLocaleDateString() %></p>
+                                            <p class="card-text mb-1"><strong>Guests:</strong> <%= booking.guests %></p>
+                                            <p class="card-text"><strong>Total Paid:</strong> ₹<%= booking.totalPrice.toLocaleString("en-IN") %></p>
+                                            <a href="/bookings/<%= booking._id %>/invoice" class="btn btn-sm btn-outline-primary">View Invoice</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center p-5 border rounded bg-light">
+                            <i class="fa-solid fa-suitcase-rolling fa-3x text-muted mb-3"></i>
+                            <h4>No trips booked... yet!</h4>
+                            <p class="text-muted">Time to dust off your bags and start planning your next adventure.</p>
+                            <a href="/listings" class="btn btn-outline-dark fw-bold mt-2">Start Searching</a>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Wishlist Tab -->
+                <div class="tab-pane fade" id="wishlist" role="tabpanel">
+                    <% if (wishlist && wishlist.length > 0) { %>
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            <% for (let listing of wishlist) { %>
+                                <div class="col">
+                                    <div class="card border rounded shadow-sm h-100 position-relative">
+                                        <!-- Remove from Wishlist Form -->
+                                        <form action="/wishlists/<%= listing._id %>/toggle" method="POST" class="position-absolute top-0 end-0 m-2" style="z-index: 5;">
+                                            <button class="btn btn-light rounded-circle p-2 text-pink shadow-sm" type="submit" aria-label="Remove from Wishlist">
+                                                <i class="fa-solid fa-heart"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark d-flex flex-column h-100">
+                                            <% if (listing.image && listing.image.url) { %>
+                                                <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height: 180px; object-fit: cover;">
+                                            <% } else { %>
+                                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 180px;">No Image</div>
+                                            <% } %>
+                                            <div class="card-body">
+                                                <h6 class="card-title fw-bold text-truncate mb-1"><%= listing.location %>, <%= listing.country %></h6>
+                                                <p class="card-text text-muted small text-truncate"><%= listing.title %></p>
+                                                <p class="card-text fw-bold">₹<%= listing.price.toLocaleString("en-IN") %> <span class="fw-normal text-muted">night</span></p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center p-5 border rounded bg-light">
+                            <i class="fa-regular fa-heart fa-3x text-muted mb-3"></i>
+                            <h4>Your wishlist is empty</h4>
+                            <p class="text-muted">Save your favorite places to easily find them later.</p>
+                            <a href="/listings" class="btn btn-outline-dark fw-bold mt-2">Explore Listings</a>
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Hosting Tab -->
+                <div class="tab-pane fade" id="hosting" role="tabpanel">
+                    <% if (myListings && myListings.length > 0) { %>
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            <% for (let listing of myListings) { %>
+                                <div class="col">
+                                    <div class="card border rounded shadow-sm h-100">
+                                        <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark d-flex flex-column h-100">
+                                            <% if (listing.image && listing.image.url) { %>
+                                                <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height: 180px; object-fit: cover;">
+                                            <% } else { %>
+                                                <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 180px;">No Image</div>
+                                            <% } %>
+                                            <div class="card-body">
+                                                <h6 class="card-title fw-bold text-truncate mb-1"><%= listing.title %></h6>
+                                                <p class="card-text text-muted small mb-2"><i class="fa-solid fa-location-dot text-pink me-1"></i><%= listing.location %></p>
+                                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                    <span class="fw-bold text-indigo">₹<%= listing.price.toLocaleString("en-IN") %></span>
+                                                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } else { %>
+                        <div class="text-center p-5 border rounded bg-light">
+                            <i class="fa-solid fa-house-chimney fa-3x text-muted mb-3"></i>
+                            <h4>You aren't hosting any listings</h4>
+                            <p class="text-muted">Earn extra income by opening your doors to travelers.</p>
+                            <a href="/listings/new" class="btn btn-primary fw-bold mt-2">List your space</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
