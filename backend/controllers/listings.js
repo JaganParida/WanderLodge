@@ -2,7 +2,7 @@ const Listing = require("../models/listing.js");
 const Booking = require("../models/booking.js");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
-const geocodingClient = mbxGeocoding({ accessToken: mapToken });
+const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
 // Index Route API
 module.exports.index = async (req, res) => {
@@ -100,12 +100,16 @@ module.exports.createListing = async (req, res, next) => {
   try {
     let response = null;
     try {
-      response = await geocodingClient
-        .forwardGeocode({
-          query: req.body.listing.location,
-          limit: 1,
-        })
-        .send();
+      if (geocodingClient) {
+        response = await geocodingClient
+          .forwardGeocode({
+            query: req.body.listing.location,
+            limit: 1,
+          })
+          .send();
+      } else {
+        console.log("Mapbox client not initialized. Skipping geocoding.");
+      }
     } catch (mapErr) {
       console.log("Mapbox Error (Skipping geocoding):", mapErr.message);
     }
