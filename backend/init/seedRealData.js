@@ -33,7 +33,7 @@ const seedData = [
     maxGuests: 2,
     bedrooms: 1,
     beds: 1,
-    rating: 4.96,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-106.8175, 39.1911] }
   },
   {
@@ -51,14 +51,14 @@ const seedData = [
     maxGuests: 8,
     bedrooms: 4,
     beds: 5,
-    rating: 4.88,
+    rating: 0,
     geometry: { type: "Point", coordinates: [115.1054, -8.8286] }
   },
   {
     title: "Historic Castle in the Scottish Highlands",
     description: "Live like royalty in this lovingly restored 15th-century castle. Features antique furnishings, grand fireplaces, and sprawling grounds. A truly unforgettable historical experience.",
     image: {
-      url: "https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?q=80&w=1000&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1541123437800-141315b7fd6a?q=80&w=1000&auto=format&fit=crop",
       filename: "scottish_castle"
     },
     price: 85000,
@@ -69,7 +69,7 @@ const seedData = [
     maxGuests: 12,
     bedrooms: 6,
     beds: 8,
-    rating: 4.98,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-4.2247, 57.4778] }
   },
   {
@@ -87,7 +87,7 @@ const seedData = [
     maxGuests: 4,
     bedrooms: 2,
     beds: 2,
-    rating: 4.75,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-74.0060, 40.7128] }
   },
   {
@@ -105,7 +105,7 @@ const seedData = [
     maxGuests: 4,
     bedrooms: 2,
     beds: 3,
-    rating: 4.82,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-120.0324, 39.0968] }
   },
   {
@@ -123,7 +123,7 @@ const seedData = [
     maxGuests: 2,
     bedrooms: 1,
     beds: 1,
-    rating: 4.95,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-87.4654, 20.2114] }
   },
   {
@@ -141,7 +141,7 @@ const seedData = [
     maxGuests: 6,
     bedrooms: 3,
     beds: 4,
-    rating: 4.91,
+    rating: 0,
     geometry: { type: "Point", coordinates: [11.2558, 43.7696] }
   },
   {
@@ -159,7 +159,7 @@ const seedData = [
     maxGuests: 2,
     bedrooms: 1,
     beds: 1,
-    rating: 4.85,
+    rating: 0,
     geometry: { type: "Point", coordinates: [-116.3131, 34.1347] }
   },
   {
@@ -177,7 +177,7 @@ const seedData = [
     maxGuests: 4,
     bedrooms: 2,
     beds: 2,
-    rating: 4.99,
+    rating: 0,
     geometry: { type: "Point", coordinates: [25.4315, 36.3932] }
   },
   {
@@ -195,7 +195,7 @@ const seedData = [
     maxGuests: 8,
     bedrooms: 4,
     beds: 6,
-    rating: 4.93,
+    rating: 0,
     geometry: { type: "Point", coordinates: [7.7491, 46.0207] }
   }
 ];

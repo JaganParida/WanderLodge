@@ -95,11 +95,11 @@ const Navbar = () => {
           <div className="flex items-center gap-4 relative">
             {isLoggedIn && isHost ? (
               <Link to="/host-dashboard" className="hidden md:block text-sm font-semibold hover:bg-gray-100 py-2 px-4 rounded-full transition">
-                {t('WanderLodge your home')}
+                {t('Become a host')}
               </Link>
             ) : (
               <Link to="/host/signup" className="hidden md:block text-sm font-semibold hover:bg-gray-100 py-2 px-4 rounded-full transition">
-                {t('WanderLodge your home')}
+                {t('Become a host')}
               </Link>
             )}
             <button 

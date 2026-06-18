@@ -200,10 +200,22 @@ const ListingDetails = () => {
     images[4]?.url || 'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=600'
   ];
 
+  const expandedTourImages = [
+    ...displayImages,
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=1200',
+    'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200',
+    'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1200',
+    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1200',
+    'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200',
+    'https://images.unsplash.com/photo-1505691938895-1758d7def511?q=80&w=1200',
+    'https://images.unsplash.com/photo-1560185016-86f34eaf49ba?q=80&w=1200',
+    'https://images.unsplash.com/photo-1560448204-61cb05a52395?q=80&w=1200'
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <LoginModal isOpen={showLoginModal.isOpen} onClose={() => setShowLoginModal({ isOpen: false, message: '' })} message={showLoginModal.message} />
-      <PhotoTourModal isOpen={showPhotoTour} onClose={() => setShowPhotoTour(false)} images={listing.images?.length > 0 ? listing.images : displayImages} title={listing.title} />
+      <PhotoTourModal isOpen={showPhotoTour} onClose={() => setShowPhotoTour(false)} images={listing.images?.length > 1 ? listing.images : expandedTourImages} title={listing.title} />
       <RazorpayMockUI isOpen={showRazorpayMock} onClose={() => setShowRazorpayMock(false)} onSuccess={handleRazorpaySuccess} amount={pricing?.totalPrice} />
 
       {/* Header */}
