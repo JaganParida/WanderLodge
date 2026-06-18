@@ -234,7 +234,7 @@ const Home = () => {
           <Link to={`/listings/${listing._id}`} key={listing._id} className="group cursor-pointer text-gray-900 block relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-3">
               <img 
-                src={listing.images?.[0]?.url || 'https://via.placeholder.com/400'} 
+                src={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=600'} 
                 alt={listing.title} 
                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
               />
