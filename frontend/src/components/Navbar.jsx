@@ -139,6 +139,7 @@ const Navbar = () => {
                     <Link to="/signup" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-3 font-bold text-gray-900 hover:bg-gray-100 transition">Sign up</Link>
                     <Link to="/login" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">Log in</Link>
                     <hr className="my-1 border-gray-200" />
+                    <Link to="/host/signup" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">Become a host</Link>
                     <Link to="/" onClick={() => setIsDropdownOpen(false)} className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition">Help Center</Link>
                   </>
                 )}
