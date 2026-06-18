@@ -186,9 +186,11 @@ const ListingDetails = () => {
     );
   }
 
-  const averageRating = listing.reviews?.length > 0 
-    ? (listing.reviews.reduce((acc, curr) => acc + curr.rating, 0) / listing.reviews.length).toFixed(2)
-    : 'New';
+  const averageRating = listing.rating && listing.rating > 0 
+    ? listing.rating.toFixed(2)
+    : (listing.reviews?.length > 0 
+        ? (listing.reviews.reduce((acc, curr) => acc + curr.rating, 0) / listing.reviews.length).toFixed(2)
+        : 'New');
 
   // Format images for grid (ensure we have 5 spots)
   const images = listing.images || [];
@@ -222,9 +224,10 @@ const ListingDetails = () => {
       <h1 className="text-[26px] font-semibold text-gray-900 mb-1">{listing.title}</h1>
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center text-[15px] font-medium text-gray-900 underline gap-2">
-           {listing.reviews?.length > 0 && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> {averageRating} · {listing.reviews?.length} reviews</span>}
+           {(listing.rating > 0 || listing.reviews?.length > 0) && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> {averageRating}</span>}
            {listing.reviews?.length > 0 && <span className="no-underline text-gray-400">·</span>}
-           {listing.reviews?.length === 0 && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> New</span>}
+           {listing.reviews?.length > 0 && <span>{listing.reviews.length} reviews</span>}
+           {!(listing.rating > 0 || listing.reviews?.length > 0) && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> New</span>}
            <span className="flex items-center gap-1"><MapPin size={14} className="no-underline" /> {listing.location}, {listing.country}</span>
         </div>
         <div className="flex gap-4 text-sm font-semibold underline relative">
@@ -240,17 +243,32 @@ const ListingDetails = () => {
 
       {/* Mobile Photo Viewer */}
       <div className="md:hidden relative w-[100vw] h-[300px] -mx-4 sm:-mx-6 mb-6">
-        <img 
-           src={displayImages[0]} 
-           alt="Main" 
-           className="w-full h-full object-cover cursor-pointer" 
-           onClick={() => setShowPhotoTour(true)} 
-        />
+        <div className="flex overflow-x-auto snap-x snap-mandatory h-full scrollbar-hide">
+          {displayImages.map((imgUrl, idx) => (
+            <div key={idx} className="w-full h-full flex-shrink-0 snap-center relative">
+              <img 
+                 src={imgUrl} 
+                 alt={`Photo ${idx + 1}`} 
+                 className="w-full h-full object-cover" 
+                 onClick={() => setShowPhotoTour(true)} 
+              />
+            </div>
+          ))}
+          <div 
+             className="w-full h-full flex-shrink-0 snap-center flex flex-col items-center justify-center bg-gray-100 cursor-pointer" 
+             onClick={() => setShowPhotoTour(true)}
+          >
+             <div className="border-2 border-black rounded-lg px-6 py-3 font-semibold flex items-center gap-2">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '16px', width: '16px', fill: 'currentcolor' }}><path d="m8.5 7.4-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9zm6.2-.2-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9z"></path></svg>
+                Show all photos
+             </div>
+          </div>
+        </div>
         <button 
            onClick={() => setShowPhotoTour(true)} 
-           className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-lg text-sm font-semibold backdrop-blur-sm"
+           className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-lg text-sm font-semibold backdrop-blur-sm shadow-sm"
         >
-          1 / {listing.images?.length || 1}
+          View all photos
         </button>
       </div>
 
