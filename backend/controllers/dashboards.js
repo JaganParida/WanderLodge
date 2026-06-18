@@ -18,7 +18,7 @@ module.exports.renderProfile = async (req, res) => {
         const myListingIds = myListings.map(listing => listing._id);
 
         const hostReservations = await Booking.find({ listing: { $in: myListingIds } })
-            .populate('listing', 'title image')
+            .populate('listing', 'title images')
             .populate('user', 'username email')
             .sort({ createdAt: -1 });
 

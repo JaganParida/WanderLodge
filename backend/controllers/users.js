@@ -11,8 +11,8 @@ const generateToken = (user) => {
 // Cookie options for httpOnly secure cookie
 const cookieOptions = {
     httpOnly: true,       // JavaScript CANNOT access this cookie
-    secure: process.env.NODE_ENV === "production", // HTTPS only in production
-    sameSite: "strict",   // Blocks CSRF attacks
+    secure: true, // HTTPS only (Vercel is HTTPS)
+    sameSite: "none",   // Allows cross-site cookie sending for Vercel edge/api
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     path: "/",
 };
