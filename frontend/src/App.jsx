@@ -21,8 +21,10 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login defaultRole="user" />} />
+              <Route path="/signup" element={<Signup defaultRole="user" />} />
+              <Route path="/host/login" element={<Login defaultRole="host" />} />
+              <Route path="/host/signup" element={<Signup defaultRole="host" />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route path="/listings/:id" element={<ListingDetails />} />

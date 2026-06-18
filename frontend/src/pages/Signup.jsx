@@ -3,11 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const Signup = () => {
+const Signup = ({ defaultRole = 'user' }) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  const [role] = useState(defaultRole);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,27 +61,16 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex justify-center items-center py-20 px-4">
+    <div className="flex justify-center items-center py-20 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign up for WanderLodge</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">
+          {role === 'host' ? 'Become a WanderLodge Host' : 'Sign up for WanderLodge'}
+        </h2>
         
         {error && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4 text-sm">{error}</div>}
         
         <form onSubmit={handleSignup} className="space-y-4">
           
-          {/* Role Selector */}
-          <div className="flex gap-4 mb-6">
-            <label className={`flex-1 flex flex-col items-center justify-center p-4 border rounded-xl cursor-pointer transition ${role === 'user' ? 'border-airbnb bg-red-50 text-airbnb' : 'border-gray-200 hover:border-gray-300'}`}>
-              <input type="radio" name="role" value="user" className="hidden" checked={role === 'user'} onChange={(e) => setRole(e.target.value)} />
-              <span className="font-semibold">Traveler</span>
-              <span className="text-xs text-gray-500 mt-1">I want to book stays</span>
-            </label>
-            <label className={`flex-1 flex flex-col items-center justify-center p-4 border rounded-xl cursor-pointer transition ${role === 'host' ? 'border-airbnb bg-red-50 text-airbnb' : 'border-gray-200 hover:border-gray-300'}`}>
-              <input type="radio" name="role" value="host" className="hidden" checked={role === 'host'} onChange={(e) => setRole(e.target.value)} />
-              <span className="font-semibold">Host</span>
-              <span className="text-xs text-gray-500 mt-1">I want to rent my space</span>
-            </label>
-          </div>
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">Username</label>
@@ -160,7 +149,7 @@ const Signup = () => {
 
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          Already have an account? <Link to="/login" className="font-semibold text-black hover:underline">Log in</Link>
+          Already have an account? <Link to={role === 'host' ? '/host/login' : '/login'} className="font-semibold text-black hover:underline">Log in</Link>
         </div>
       </div>
     </div>

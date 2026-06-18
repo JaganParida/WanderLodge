@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Star, MapPin, Share, Heart, Award, Key, Info, Home as HomeIcon, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
+import PhotoTourModal from '../components/PhotoTourModal';
 import RazorpayMockUI from '../components/RazorpayMockUI';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -35,6 +36,7 @@ const ListingDetails = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [showShareTooltip, setShowShareTooltip] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState({ isOpen: false, message: '' });
+  const [showPhotoTour, setShowPhotoTour] = useState(false);
   
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
@@ -201,6 +203,7 @@ const ListingDetails = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <LoginModal isOpen={showLoginModal.isOpen} onClose={() => setShowLoginModal({ isOpen: false, message: '' })} message={showLoginModal.message} />
+      <PhotoTourModal isOpen={showPhotoTour} onClose={() => setShowPhotoTour(false)} images={listing.images?.length > 0 ? listing.images : displayImages} title={listing.title} />
       <RazorpayMockUI isOpen={showRazorpayMock} onClose={() => setShowRazorpayMock(false)} onSuccess={handleRazorpaySuccess} amount={pricing?.totalPrice} />
 
       {/* Header */}
@@ -240,7 +243,7 @@ const ListingDetails = () => {
         <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
           <img src={displayImages[4]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
-        <button className="absolute bottom-6 right-6 bg-white px-4 py-1.5 rounded-lg font-semibold text-[15px] border border-black flex items-center gap-2 hover:bg-gray-100 shadow-md">
+        <button onClick={() => setShowPhotoTour(true)} className="absolute bottom-6 right-6 bg-white px-4 py-1.5 rounded-lg font-semibold text-[15px] border border-black flex items-center gap-2 hover:bg-gray-100 shadow-md">
            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '16px', width: '16px', fill: 'currentcolor' }}><path d="m8.5 7.4-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9zm6.2-.2-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9z"></path></svg>
            Show all photos
         </button>
