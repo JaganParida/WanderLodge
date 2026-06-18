@@ -16,8 +16,12 @@ const Login = ({ defaultRole = 'user' }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await login(username, password);
-      navigate('/');
+      const data = await login(username, password);
+      if (data.user.role === 'host') {
+        navigate('/host-dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
     } finally {
