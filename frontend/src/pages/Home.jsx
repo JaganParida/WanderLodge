@@ -206,13 +206,23 @@ const Home = () => {
 
       {/* Search Header */}
       {isSearchActive && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex justify-between items-center">
-           <h2 className="text-xl font-bold">
-             Search results {searchQuery && `for "${searchQuery}"`} {searchGuests && `with ${searchGuests}+ guests`}
-           </h2>
-           <button onClick={() => { setSelectedCategory('All'); navigate('/'); }} className="text-sm font-semibold border border-black px-4 py-2 rounded-lg hover:bg-gray-100 transition">
-             Clear Search
-           </button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-6">
+           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-gray-200 pb-6">
+             <div>
+               <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                 {listings.length} {listings.length === 1 ? 'stay' : 'stays'} found
+               </p>
+               <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+                 Stays {searchQuery ? `in ${searchQuery}` : ''} {searchGuests ? `for ${searchGuests}+ guests` : ''}
+               </h2>
+             </div>
+             <button 
+                onClick={() => { setSelectedCategory('All'); navigate('/'); }} 
+                className="text-sm font-semibold border-2 border-black bg-white text-black px-6 py-2.5 rounded-full hover:bg-black hover:text-white transition-all duration-300 shadow-sm active:scale-95"
+             >
+               Clear Search
+             </button>
+           </div>
         </div>
       )}
 
