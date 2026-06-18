@@ -58,7 +58,7 @@ const seedData = [
     title: "Historic Castle in the Scottish Highlands",
     description: "Live like royalty in this lovingly restored 15th-century castle. Features antique furnishings, grand fireplaces, and sprawling grounds. A truly unforgettable historical experience.",
     image: {
-      url: "https://images.unsplash.com/photo-1541123437800-141315b7fd6a?q=80&w=1000&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1000&auto=format&fit=crop",
       filename: "scottish_castle"
     },
     price: 85000,
@@ -76,7 +76,7 @@ const seedData = [
     title: "Modern Loft in Downtown Manhattan",
     description: "Sleek, industrial-chic loft in the heart of NYC. Floor-to-ceiling windows, exposed brick, and luxury appliances. Walking distance to the best restaurants and Broadway shows.",
     image: {
-      url: "https://images.unsplash.com/photo-1502672260266-1c1de24244fe?q=80&w=1000&auto=format&fit=crop",
+      url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=1000&auto=format&fit=crop",
       filename: "nyc_loft"
     },
     price: 22000,
