@@ -174,6 +174,7 @@ const InvoiceCard = ({ booking, authUser, id }) => (
 
 const Dashboard = () => {
   const { user: authUser, loading: authLoading } = useAuth();
+  const isLoggedIn = !!authUser;
   const [activeTab, setActiveTab] = useState('trips');
   const [data, setData] = useState({ myBookings: [], wishlist: [] });
   const [loading, setLoading] = useState(true);
