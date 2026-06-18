@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -8,16 +8,20 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       await login(username, password);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,8 +66,13 @@ const Login = () => {
             </div>
           </div>
           
-          <button type="submit" className="w-full bg-airbnb text-white font-bold py-3 rounded-lg hover:bg-airbnb-dark transition">
-            Continue
+          <button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full flex justify-center items-center gap-2 bg-airbnb text-white font-bold py-3 rounded-lg hover:bg-airbnb-dark transition disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {isLoading && <Loader2 size={18} className="animate-spin" />}
+            {isLoading ? 'Logging in...' : 'Continue'}
           </button>
         </form>
         

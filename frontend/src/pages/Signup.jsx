@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, CheckCircle2, XCircle } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Signup = () => {
@@ -10,6 +10,7 @@ const Signup = () => {
   const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { signup } = useAuth();
 
@@ -42,6 +43,7 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const data = await signup(username, email, password, role);
       
@@ -53,6 +55,8 @@ const Signup = () => {
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -145,10 +149,11 @@ const Signup = () => {
           
           <button 
             type="submit" 
-            disabled={password.length > 0 && strength < 3}
-            className="w-full bg-airbnb text-white font-bold py-3 rounded-lg hover:bg-airbnb-dark transition mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={(password.length > 0 && strength < 3) || isLoading}
+            className="w-full flex justify-center items-center gap-2 bg-airbnb text-white font-bold py-3 rounded-lg hover:bg-airbnb-dark transition mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Agree and continue
+            {isLoading && <Loader2 size={18} className="animate-spin" />}
+            {isLoading ? 'Creating account...' : 'Agree and continue'}
           </button>
         </form>
         
