@@ -48,8 +48,13 @@ async function main() {
 }
 
 // Middleware setup
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174'], // Vite ports
+    origin: allowedOrigins,
     credentials: true,
 }));
 app.use(cookieParser());
