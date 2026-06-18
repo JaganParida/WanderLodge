@@ -21,10 +21,10 @@ const seedData = [
   {
     title: "Secluded Glass Cabin in the Forest",
     description: "Immerse yourself in nature in this stunning architectural glass cabin. Wake up to panoramic views of the ancient forest. Features a private hot tub, fire pit, and luxury linens. Perfect for a romantic getaway.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1000&auto=format&fit=crop",
       filename: "glass_cabin"
-    },
+    }],
     price: 18500,
     location: "Aspen, Colorado",
     country: "United States",
@@ -39,10 +39,10 @@ const seedData = [
   {
     title: "Luxury Beachfront Villa",
     description: "Experience ultimate luxury in this modern beachfront villa. Infinity pool overlooking the ocean, private chef available, and direct beach access. Sunsets here are truly magical.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=1000&auto=format&fit=crop",
       filename: "beach_villa"
-    },
+    }],
     price: 45000,
     location: "Bali, Indonesia",
     country: "Indonesia",
@@ -57,10 +57,10 @@ const seedData = [
   {
     title: "Historic Castle in the Scottish Highlands",
     description: "Live like royalty in this lovingly restored 15th-century castle. Features antique furnishings, grand fireplaces, and sprawling grounds. A truly unforgettable historical experience.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1000&auto=format&fit=crop",
       filename: "scottish_castle"
-    },
+    }],
     price: 85000,
     location: "Inverness, Scotland",
     country: "United Kingdom",
@@ -75,10 +75,10 @@ const seedData = [
   {
     title: "Modern Loft in Downtown Manhattan",
     description: "Sleek, industrial-chic loft in the heart of NYC. Floor-to-ceiling windows, exposed brick, and luxury appliances. Walking distance to the best restaurants and Broadway shows.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=1000&auto=format&fit=crop",
       filename: "nyc_loft"
-    },
+    }],
     price: 22000,
     location: "New York City, NY",
     country: "United States",
@@ -93,10 +93,10 @@ const seedData = [
   {
     title: "Rustic Farmhouse Retreat",
     description: "Escape the city to this charming organic farm. Feed the animals, collect fresh eggs, and relax on the wrap-around porch. A perfect family getaway.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000&auto=format&fit=crop",
       filename: "rustic_farm"
-    },
+    }],
     price: 15500,
     location: "Tuscany, Italy",
     country: "Italy",
@@ -111,10 +111,10 @@ const seedData = [
   {
     title: "Serene Lakefront Cabin",
     description: "Wake up to calm waters and mountain views. This cozy A-frame cabin offers a private dock, kayaks, and a wood-burning stove. Ideal for a peaceful retreat.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1000&auto=format&fit=crop",
       filename: "lake_cabin"
-    },
+    }],
     price: 12000,
     location: "Lake Tahoe, CA",
     country: "United States",
@@ -129,10 +129,10 @@ const seedData = [
   {
     title: "Eco-Friendly Treehouse",
     description: "Sleep among the canopy in this unique, sustainable treehouse. Features a wraparound deck, outdoor shower, and breathtaking jungle views. An adventurer's dream.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1000&auto=format&fit=crop",
       filename: "treehouse"
-    },
+    }],
     price: 9500,
     location: "Tulum, Quintana Roo",
     country: "Mexico",
@@ -147,10 +147,10 @@ const seedData = [
   {
     title: "Luxury Desert Oasis",
     description: "Experience the magic of the desert in this ultra-modern oasis. Features a stunning infinity pool, fire pit lounge, and stargazing deck. Minimalist luxury at its finest.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1534008897995-27a23e859048?q=80&w=1000&auto=format&fit=crop",
       filename: "desert_oasis"
-    },
+    }],
     price: 35000,
     location: "Joshua Tree, CA",
     country: "United States",
@@ -165,10 +165,10 @@ const seedData = [
   {
     title: "Charming Santorini Cave House",
     description: "Stay in a traditional caldera cave house with stunning Aegean Sea views. Private terrace, plunge pool, and authentic Greek architecture. A romantic Mediterranean escape.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop",
       filename: "santorini_cave"
-    },
+    }],
     price: 28000,
     location: "Oia, South Aegean",
     country: "Greece",
@@ -183,10 +183,10 @@ const seedData = [
   {
     title: "Alpine Ski Chalet",
     description: "Hit the slopes directly from this ski-in/ski-out luxury chalet. Features a sauna, vaulted ceilings, and panoramic mountain views. The ultimate winter getaway.",
-    image: {
+    images: [{
       url: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1000&auto=format&fit=crop",
       filename: "ski_chalet"
-    },
+    }],
     price: 48000,
     location: "Zermatt, Valais",
     country: "Switzerland",
@@ -227,10 +227,10 @@ const seedDB = async () => {
       ...obj,
       title: obj.title + " (Premium)",
       price: obj.price + 5000,
-      image: {
-          ...obj.image,
-          url: obj.image.url.replace('q=80', 'q=90') // slightly different URL params just to be distinct
-      }
+      images: [{
+          ...obj.images[0],
+          url: obj.images[0].url.replace('q=80', 'q=90') // slightly different URL params just to be distinct
+      }]
   }));
 
   const allData = [...seedData, ...additionalData];
