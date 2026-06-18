@@ -224,13 +224,13 @@ const HostDashboard = () => {
     if (authLoading || !isHost) return;
     
     // Fetch dashboard data
-    axios.get('/api/dashboard', { timeout: 3000 })
+    axios.get('/api/dashboard')
       .then(res => {
         setData(res.data);
       })
       .catch(console.error);
 
-    axios.get('/api/host/analytics', { timeout: 3000 })
+    axios.get('/api/host/analytics')
       .then(res => {
         const reservations = (res.data.reservations || []).filter(r => r.listing !== null);
         setAnalyticsData({

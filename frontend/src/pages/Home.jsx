@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Heart, Star, Tent, Castle, Waves, Flame, Building, Trees, Home as HomeIcon, SlidersHorizontal, X, Search } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import LoginModal from '../components/LoginModal';
 
 const CATEGORIES = [
   { label: 'Trending', icon: Flame },
@@ -23,6 +24,7 @@ const Home = () => {
   const [wishlistIds, setWishlistIds] = useState([]);
   const { isLoggedIn, t, formatPrice, globalCurrency } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Filter States (Active for network requests)
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -113,6 +115,11 @@ const Home = () => {
     e.preventDefault(); // Prevent Link navigation
     e.stopPropagation();
     
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    
     // Optimistic UI Update
     setWishlistIds(prev => 
       prev.includes(id) ? prev.filter(wid => wid !== id) : [...prev, id]
@@ -161,6 +168,8 @@ const Home = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} message="Log in to add to wishlist" />
+
       {/* Category Filters */}
       <div className="flex overflow-x-auto gap-8 pb-4 mb-6 scrollbar-hide border-b border-gray-100 items-center">
         <div 

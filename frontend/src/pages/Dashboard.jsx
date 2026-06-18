@@ -204,18 +204,10 @@ const Dashboard = () => {
       window.location.href = '/login';
       return;
     }
-    axios.get('/api/dashboard', { timeout: 3000 })
+    axios.get('/api/dashboard')
       .then(res => { setData(res.data); setLoading(false); })
       .catch(err => {
         console.error("Dashboard fetch error:", err.message);
-        setData({
-          myBookings: [
-            { _id: 'b1demo001', listing: { title: 'Luxury Villa with Pool', location: 'Bali, Indonesia', images: [{ url: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=400' }] }, checkIn: '2026-07-15', checkOut: '2026-07-20', totalPrice: 75000, status: 'Confirmed', guests: 2 }
-          ],
-          wishlist: [
-            { _id: 'w1demo001', title: 'Cozy Mountain Cabin', location: 'Swiss Alps', price: 12000, images: [{ url: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=400' }], rating: 4.8 }
-          ]
-        });
         setLoading(false);
       });
   }, [authLoading, authUser]);

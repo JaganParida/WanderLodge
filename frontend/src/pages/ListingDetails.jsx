@@ -1,22 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { Star, MapPin, Share, Heart, Award, Shield, Key, ChevronDown, CheckCircle, Flame, Calendar as CalendarIcon, Info } from 'lucide-react';
+import { Star, MapPin, Share, Heart, Award, Key, Info, Home as HomeIcon, CheckCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-// Swiper imports
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import LoginModal from '../components/LoginModal';
 import RazorpayMockUI from '../components/RazorpayMockUI';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix leaflet icon path issue (fallback)
+// Fix leaflet icon
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
     iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -24,7 +17,6 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png'
 });
 
-// Custom WanderLodge Premium Marker
 const customMarker = new L.divIcon({
   className: 'custom-div-icon bg-transparent border-0',
   html: `<div class="bg-airbnb w-14 h-14 rounded-full flex justify-center items-center shadow-lg border-2 border-white transform transition hover:scale-110"><svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg></div>`,
@@ -34,55 +26,45 @@ const customMarker = new L.divIcon({
 });
 
 const ListingDetails = () => {
-  const { user, isLoggedIn, formatPrice, t, globalCurrency } = useAuth();
+  const { user, isLoggedIn, formatPrice, t } = useAuth();
   const { id } = useParams();
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   
-  // Wishlist state
   const [isSaved, setIsSaved] = useState(false);
   const [showShareTooltip, setShowShareTooltip] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState({ isOpen: false, message: '' });
   
-  // Review state
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
 
-  // Booking state
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState(1);
   const [pricing, setPricing] = useState(null);
   const [pricingError, setPricingError] = useState('');
-  
-  // Razorpay Mock State
   const [showRazorpayMock, setShowRazorpayMock] = useState(false);
 
-  // Helper: get today's date in YYYY-MM-DD
   const getToday = () => new Date().toISOString().split('T')[0];
-  // Helper: get next day from a date string
   const getNextDay = (dateStr) => {
     const d = new Date(dateStr);
     d.setDate(d.getDate() + 1);
     return d.toISOString().split('T')[0];
   };
 
-  // When check-in changes, auto-adjust check-out to be at least 1 day after
   const handleCheckInChange = (val) => {
     setCheckIn(val);
-    if (!checkOut || checkOut <= val) {
-      setCheckOut(getNextDay(val));
-    }
+    if (!checkOut || checkOut <= val) setCheckOut(getNextDay(val));
   };
 
-  // Calculate pricing whenever dates change
   useEffect(() => {
     setPricingError('');
     if (checkIn && checkOut && checkOut > checkIn) {
       axios.post(`/api/listings/${id}/book/calculate`, { checkIn, checkOut, guests })
       .then(res => setPricing(res.data))
       .catch(err => {
-         console.error("Pricing Error:", err);
          setPricing(null);
          setPricingError(err.response?.data?.error || 'Could not calculate price');
       });
@@ -95,59 +77,38 @@ const ListingDetails = () => {
 
   const handleReserve = () => {
     if (!isLoggedIn) {
-       return window.location.href = '/login';
+      setShowLoginModal({ isOpen: true, message: 'Log in to reserve this place' });
+      return;
     }
     if (!canReserve) return;
-    
-    // Open Razorpay UI Mock
     setShowRazorpayMock(true);
   };
 
   const handleRazorpaySuccess = () => {
-    // Make real backend call to save booking after mock payment succeeds
-    axios.post(`/api/listings/${id}/book`, {
-      checkIn, checkOut, guests, totalPrice: pricing.totalPrice
-    }).then(() => {
-      window.location.href = '/dashboard';
-    }).catch(err => {
-      console.error(err);
-      alert('Failed to save booking to database.');
-    });
+    axios.post(`/api/listings/${id}/book`, { checkIn, checkOut, guests, totalPrice: pricing.totalPrice })
+    .then(() => window.location.href = '/dashboard')
+    .catch(err => alert('Failed to save booking to database.'));
   };
 
   useEffect(() => {
-    // We will fetch from /api/listings/:id once the backend is ready
-    // Added 3s timeout so it doesn't hang infinitely if DB is down
-    axios.get(`/api/listings/${id}`, { timeout: 3000 })
+    axios.get(`/api/listings/${id}`)
       .then(res => {
         setListing(res.data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Error fetching listing (Fallback to mock data):", err.message);
-        // Mock data fallback
-        setListing({
-          _id: id,
-          title: 'Luxury Villa with Private Pool & Ocean View',
-          location: 'Bali, Indonesia',
-          country: 'Indonesia',
-          price: 15000,
-          description: 'Experience ultimate luxury in this stunning villa featuring a private infinity pool overlooking the ocean. Perfect for romantic getaways or family vacations. The space includes a fully equipped kitchen, high-speed WiFi, and daily housekeeping.',
-          images: [{ url: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop' }],
-          owner: { username: 'HostMaster' },
-          reviews: []
-        });
+        console.error("Error fetching listing:", err.message);
+        setError('Failed to load listing. It may have been deleted or does not exist.');
         setLoading(false);
       });
       
     if (isLoggedIn) {
-       axios.get('/api/dashboard', { timeout: 3000 })
+       axios.get('/api/dashboard')
          .then(res => {
             if(res.data.wishlist) {
                setIsSaved(res.data.wishlist.some(w => (w._id || w) === id));
             }
-         })
-         .catch(console.error);
+         }).catch(console.error);
     }
   }, [id, isLoggedIn]);
 
@@ -158,38 +119,31 @@ const ListingDetails = () => {
   };
 
   const handleSave = async () => {
-    if (!isLoggedIn) return window.location.href = '/login';
-    
-    setIsSaved(!isSaved); // Optimistic update
+    if (!isLoggedIn) {
+      setShowLoginModal({ isOpen: true, message: 'Log in to add to wishlist' });
+      return;
+    }
+    setIsSaved(!isSaved); 
     try {
       await axios.post(`/api/wishlists/${id}/toggle`, {});
     } catch (err) {
-      setIsSaved(!isSaved); // Revert
-      console.error(err);
+      setIsSaved(!isSaved); 
     }
   };
 
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    if (!isLoggedIn) return window.location.href = '/login';
+    if (!isLoggedIn) {
+      setShowLoginModal({ isOpen: true, message: 'Log in to leave a review' });
+      return;
+    }
     if (!reviewComment.trim()) return;
 
     setIsSubmittingReview(true);
     try {
-      const res = await axios.post(`/api/listings/${id}/reviews`, {
-        review: { rating: reviewRating, comment: reviewComment }
-      });
-      // Append the newly created review (with dummy author obj if not fully populated by backend immediately)
-      const newReview = { 
-         ...res.data.review, 
-         author: { _id: user?._id, username: user?.username || 'You' },
-         createdAt: new Date().toISOString()
-      };
-      
-      setListing(prev => ({
-        ...prev,
-        reviews: [...prev.reviews, newReview]
-      }));
+      const res = await axios.post(`/api/listings/${id}/reviews`, { review: { rating: reviewRating, comment: reviewComment }});
+      const newReview = { ...res.data.review, author: { _id: user?._id, username: user?.username || 'You' }, createdAt: new Date().toISOString()};
+      setListing(prev => ({ ...prev, reviews: [...prev.reviews, newReview] }));
       setReviewComment('');
       setReviewRating(5);
     } catch (err) {
@@ -203,363 +157,259 @@ const ListingDetails = () => {
     if (!window.confirm("Delete this review?")) return;
     try {
       await axios.delete(`/api/listings/${id}/reviews/${reviewId}`);
-      setListing(prev => ({
-        ...prev,
-        reviews: prev.reviews.filter(r => r._id !== reviewId)
-      }));
+      setListing(prev => ({ ...prev, reviews: prev.reviews.filter(r => r._id !== reviewId) }));
     } catch (err) {
       alert(err.response?.data?.error || "Failed to delete review");
     }
   };
 
-  const averageRating = listing?.reviews?.length > 0 
-    ? (listing.reviews.reduce((acc, curr) => acc + curr.rating, 0) / listing.reviews.length).toFixed(2)
-    : 'New';
-
-
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
-        {/* Title & Header Skeleton */}
         <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-        <div className="flex justify-between items-end mb-6">
-          <div className="flex items-center gap-4">
-            <div className="h-4 bg-gray-200 rounded w-48"></div>
-          </div>
-          <div className="flex gap-4">
-            <div className="h-4 bg-gray-200 rounded w-16"></div>
-            <div className="h-4 bg-gray-200 rounded w-16"></div>
-          </div>
-        </div>
-
-        {/* Image Gallery Skeleton */}
-        <div className="rounded-2xl overflow-hidden mb-8 aspect-[2/1] md:aspect-[3/1] bg-gray-200"></div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
-          {/* Left Content Skeleton */}
-          <div className="lg:col-span-2">
-            <div className="flex justify-between items-center pb-6 border-b border-gray-200">
-              <div className="w-2/3">
-                <div className="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-              <div className="h-14 w-14 rounded-full bg-gray-200 flex-shrink-0"></div>
-            </div>
-
-            <div className="py-6 border-b border-gray-200 space-y-6">
-              <div className="flex gap-4 items-start">
-                <div className="w-6 h-6 rounded bg-gray-200 flex-shrink-0"></div>
-                <div className="w-full">
-                  <div className="h-5 bg-gray-200 rounded w-1/4 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-6 h-6 rounded bg-gray-200 flex-shrink-0"></div>
-                <div className="w-full">
-                  <div className="h-5 bg-gray-200 rounded w-1/3 mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="py-6 border-b border-gray-200">
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            </div>
-          </div>
-
-          {/* Right Content - Booking Widget Skeleton */}
-          <div className="lg:col-span-1 relative">
-            <div className="sticky top-28 bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
-              <div className="flex justify-between items-end mb-6">
-                <div className="h-8 bg-gray-200 rounded w-32"></div>
-                <div className="h-4 bg-gray-200 rounded w-24"></div>
-              </div>
-              <div className="h-24 bg-gray-200 rounded-xl mb-4"></div>
-              <div className="h-12 bg-gray-200 rounded-lg w-full mb-4"></div>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <div className="h-4 bg-gray-200 rounded w-24"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                </div>
-                <div className="flex justify-between">
-                  <div className="h-4 bg-gray-200 rounded w-24"></div>
-                  <div className="h-4 bg-gray-200 rounded w-16"></div>
-                </div>
-                <hr className="my-4 border-gray-100" />
-                <div className="flex justify-between">
-                  <div className="h-5 bg-gray-200 rounded w-20"></div>
-                  <div className="h-5 bg-gray-200 rounded w-20"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div className="h-4 bg-gray-200 rounded w-48 mb-6"></div>
+        <div className="rounded-2xl overflow-hidden mb-8 aspect-[2/1] bg-gray-200"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12"><div className="lg:col-span-2"><div className="h-32 bg-gray-200 rounded"></div></div><div className="h-64 bg-gray-200 rounded-2xl"></div></div>
       </div>
     );
   }
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Razorpay Mock UI Overlay */}
-      <RazorpayMockUI 
-        isOpen={showRazorpayMock} 
-        onClose={() => setShowRazorpayMock(false)} 
-        onSuccess={handleRazorpaySuccess} 
-        amount={pricing?.totalPrice} 
-      />
+  if (error || !listing) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <h2 className="text-2xl font-bold mb-2">Oops!</h2>
+        <p className="text-gray-500 mb-6">{error || 'Listing not found'}</p>
+        <Link to="/" className="bg-black text-white px-6 py-3 rounded-lg font-bold">Back to Home</Link>
+      </div>
+    );
+  }
 
-      {/* Title & Header */}
-      <h1 className="text-3xl font-semibold text-gray-900 mb-2">{listing.title}</h1>
-      <div className="flex justify-between items-end mb-6">
-        <div className="flex items-center gap-4 text-sm font-medium text-gray-700">
-          <span className="flex items-center gap-1"><Star size={16} fill="currentColor" /> {averageRating} · {listing.reviews?.length || 0} reviews</span>
-          <span className="flex items-center gap-1"><MapPin size={16} /> {listing.location}, {listing.country}</span>
+  const averageRating = listing.reviews?.length > 0 
+    ? (listing.reviews.reduce((acc, curr) => acc + curr.rating, 0) / listing.reviews.length).toFixed(2)
+    : 'New';
+
+  // Format images for grid (ensure we have 5 spots)
+  const images = listing.images || [];
+  const displayImages = [
+    images[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200',
+    images[1]?.url || 'https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=600',
+    images[2]?.url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600',
+    images[3]?.url || 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=600',
+    images[4]?.url || 'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=600'
+  ];
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <LoginModal isOpen={showLoginModal.isOpen} onClose={() => setShowLoginModal({ isOpen: false, message: '' })} message={showLoginModal.message} />
+      <RazorpayMockUI isOpen={showRazorpayMock} onClose={() => setShowRazorpayMock(false)} onSuccess={handleRazorpaySuccess} amount={pricing?.totalPrice} />
+
+      {/* Header */}
+      <h1 className="text-[26px] font-semibold text-gray-900 mb-1">{listing.title}</h1>
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center text-[15px] font-medium text-gray-900 underline gap-2">
+           {listing.reviews?.length > 0 && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> {averageRating} · {listing.reviews?.length} reviews</span>}
+           {listing.reviews?.length > 0 && <span className="no-underline text-gray-400">·</span>}
+           {listing.reviews?.length === 0 && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> New</span>}
+           <span className="flex items-center gap-1"><MapPin size={14} className="no-underline" /> {listing.location}, {listing.country}</span>
         </div>
-        <div className="flex gap-4 text-sm font-medium underline relative">
-          <button onClick={handleShare} className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg transition">
+        <div className="flex gap-4 text-sm font-semibold underline relative">
+          <button onClick={handleShare} className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
              <Share size={16} /> Share
           </button>
-          {showShareTooltip && (
-             <span className="absolute -top-8 left-0 bg-black text-white text-xs px-2 py-1 rounded shadow">Link copied!</span>
-          )}
-          <button onClick={handleSave} className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-lg transition">
-             <Heart size={16} className={`${isSaved ? 'fill-airbnb text-airbnb' : ''}`} /> 
-             {isSaved ? 'Saved' : 'Save'}
+          {showShareTooltip && <span className="absolute -top-8 left-0 bg-black text-white text-xs px-2 py-1 rounded shadow">Link copied!</span>}
+          <button onClick={handleSave} className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
+             <Heart size={16} className={`${isSaved ? 'fill-airbnb text-airbnb' : ''}`} /> {isSaved ? 'Saved' : 'Save'}
           </button>
         </div>
       </div>
 
-      {/* Image Gallery */}
-      <div className="rounded-2xl overflow-hidden mb-8 aspect-[2/1] md:aspect-[3/1] bg-gray-200 relative group">
-        {listing.images && listing.images.length > 0 ? (
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            navigation
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 3000, disableOnInteraction: false }}
-            className="w-full h-full"
-          >
-            {listing.images.map((img, i) => (
-              <SwiperSlide key={i}>
-                <img src={img.url} alt={`${listing.title} ${i + 1}`} className="w-full h-full object-cover" />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        ) : (
-          <img src="https://via.placeholder.com/1200x600" alt="Placeholder" className="w-full h-full object-cover" />
-        )}
+      {/* Airbnb-style Photo Grid */}
+      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[50vh] min-h-[400px] max-h-[500px] mb-8 relative rounded-2xl overflow-hidden">
+        <div className="col-span-2 row-span-2 h-full cursor-pointer overflow-hidden group">
+          <img src={displayImages[0]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+        </div>
+        <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
+          <img src={displayImages[1]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+        </div>
+        <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
+          <img src={displayImages[2]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+        </div>
+        <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
+          <img src={displayImages[3]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+        </div>
+        <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
+          <img src={displayImages[4]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+        </div>
+        <button className="absolute bottom-6 right-6 bg-white px-4 py-1.5 rounded-lg font-semibold text-[15px] border border-black flex items-center gap-2 hover:bg-gray-100 shadow-md">
+           <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '16px', width: '16px', fill: 'currentcolor' }}><path d="m8.5 7.4-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9zm6.2-.2-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9z"></path></svg>
+           Show all photos
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-20 gap-y-10 relative">
         {/* Left Content */}
         <div className="lg:col-span-2">
+          {/* Host Info */}
           <div className="flex justify-between items-center pb-6 border-b border-gray-200">
             <div>
-              <h2 className="text-2xl font-semibold mb-1">Hosted by {listing.owner?.username || 'Superhost'}</h2>
-              <p className="text-gray-500">{listing.maxGuests || 2} guests · {listing.bedrooms || 1} bedrooms · {listing.beds || 1} beds</p>
+              <h2 className="text-[22px] font-semibold mb-1">Room in a home hosted by {listing.owner?.username || 'Superhost'}</h2>
+              <ol className="flex text-[15px] text-gray-900 list-none gap-2">
+                <li>{listing.maxGuests || 2} guests</li>
+                <li>·</li>
+                <li>{listing.bedrooms || 1} bedrooms</li>
+                <li>·</li>
+                <li>{listing.beds || 1} beds</li>
+              </ol>
             </div>
             <div className="h-14 w-14 rounded-full bg-gray-300 overflow-hidden flex-shrink-0">
-               <img src="https://i.pravatar.cc/150?img=68" alt="Host" className="w-full h-full object-cover"/>
+               <img src={`https://ui-avatars.com/api/?name=${listing.owner?.username || 'H'}&background=random`} alt="Host" className="w-full h-full object-cover"/>
             </div>
           </div>
 
-          <div className="py-6 border-b border-gray-200 space-y-4">
-            <div className="flex gap-4 items-start">
-              <Award className="mt-1 flex-shrink-0" size={24} />
+          {/* Highlights */}
+          <div className="py-8 border-b border-gray-200 space-y-6">
+            <div className="flex gap-5 items-start">
+              <Award className="flex-shrink-0" size={28} strokeWidth={1.5} />
               <div>
-                <h3 className="font-semibold text-lg">Superhost</h3>
-                <p className="text-gray-500">Superhosts are experienced, highly rated hosts who are committed to providing great stays.</p>
+                <h3 className="font-semibold text-lg">{listing.owner?.username || 'Superhost'} is a Superhost</h3>
+                <p className="text-gray-500 text-[15px] mt-1">Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.</p>
               </div>
             </div>
-            <div className="flex gap-4 items-start">
-              <Key className="mt-1 flex-shrink-0" size={24} />
+            <div className="flex gap-5 items-start">
+              <Key className="flex-shrink-0" size={28} strokeWidth={1.5} />
               <div>
                 <h3 className="font-semibold text-lg">Great check-in experience</h3>
-                <p className="text-gray-500">100% of recent guests gave the check-in process a 5-star rating.</p>
+                <p className="text-gray-500 text-[15px] mt-1">100% of recent guests gave the check-in process a 5-star rating.</p>
               </div>
             </div>
           </div>
 
-          <div className="py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold mb-4">About this space</h2>
-            <p className="text-gray-700 leading-relaxed">{listing.description}</p>
+          {/* Description */}
+          <div className="py-8 border-b border-gray-200">
+            <div className="text-[16px] text-gray-900 leading-relaxed whitespace-pre-wrap">{listing.description}</div>
           </div>
 
-          <div className="py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold mb-6">What this place offers</h2>
-            {listing.amenities && listing.amenities.length > 0 ? (
-               <div className="grid grid-cols-2 gap-4">
-                 {listing.amenities.map(amenity => (
-                   <div key={amenity} className="flex items-center gap-3 text-gray-700">
-                      <div className="text-gray-400">
-                         {/* Fallback Icon for all amenities */}
-                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7"/></svg>
-                      </div>
-                      <span className="text-lg">{amenity}</span>
-                   </div>
-                 ))}
-               </div>
-            ) : (
-               <p className="text-gray-500 italic">No amenities specified.</p>
+          {/* Amenities */}
+          <div className="py-8 border-b border-gray-200">
+            <h2 className="text-[22px] font-semibold mb-6">What this place offers</h2>
+            <div className="grid grid-cols-2 gap-y-4 gap-x-8">
+               {listing.amenities?.map(amenity => (
+                 <div key={amenity} className="flex items-center gap-4 text-gray-900 pb-2">
+                    <CheckCircle size={24} strokeWidth={1.5} className="text-gray-500" />
+                    <span className="text-[16px]">{amenity}</span>
+                 </div>
+               ))}
+               {(!listing.amenities || listing.amenities.length === 0) && <p className="text-gray-500 italic">No amenities specified.</p>}
+            </div>
+            {listing.amenities?.length > 4 && (
+              <button className="mt-6 font-semibold border border-black rounded-lg px-6 py-3 hover:bg-gray-50 transition text-[16px]">
+                Show all {listing.amenities.length} amenities
+              </button>
             )}
           </div>
 
-          <div className="py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold mb-4">Where you'll be</h2>
-            <p className="text-gray-700 mb-6">{listing.location}, {listing.country}</p>
-            <div className="h-[400px] w-full rounded-2xl overflow-hidden z-0 relative">
-              <MapContainer 
-                center={
-                  listing.geometry?.coordinates 
-                    ? [listing.geometry.coordinates[1], listing.geometry.coordinates[0]] 
-                    : [20.5937, 78.9629] // Default India
-                } 
-                zoom={listing.geometry?.coordinates ? 12 : 4} 
-                scrollWheelZoom={false} 
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                  url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-                />
+          {/* Map */}
+          <div className="py-8 border-b border-gray-200">
+            <h2 className="text-[22px] font-semibold mb-6">Where you'll be</h2>
+            <div className="h-[480px] w-full rounded-xl overflow-hidden z-0 relative mb-4">
+              <MapContainer center={listing.geometry?.coordinates ? [listing.geometry.coordinates[1], listing.geometry.coordinates[0]] : [20.5937, 78.9629]} zoom={listing.geometry?.coordinates ? 13 : 4} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+                <TileLayer attribution='&copy; OpenStreetMap contributors' url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
                 {listing.geometry?.coordinates && (
                   <Marker position={[listing.geometry.coordinates[1], listing.geometry.coordinates[0]]} icon={customMarker}>
-                    <Popup className="rounded-xl border-0 shadow-lg">
-                      <div className="text-center font-semibold text-gray-900 px-2 py-1 text-sm">
-                        Exact location provided after booking.
-                      </div>
-                    </Popup>
+                    <Popup className="rounded-xl border-0 shadow-lg"><div className="text-center font-semibold text-gray-900 px-2 py-1 text-sm">Exact location provided after booking.</div></Popup>
                   </Marker>
                 )}
               </MapContainer>
             </div>
+            <p className="font-semibold text-[16px]">{listing.location}, {listing.country}</p>
           </div>
 
-          {/* Reviews Section */}
-          <div className="py-6 border-b border-gray-200">
-            <h2 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-               <Star fill="currentColor" /> {averageRating} · {listing.reviews?.length || 0} reviews
+          {/* Reviews */}
+          <div className="py-8">
+            <h2 className="text-[22px] font-semibold mb-8 flex items-center gap-2">
+               <Star fill="currentColor" size={20} /> {averageRating} · {listing.reviews?.length || 0} reviews
             </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
               {listing.reviews?.map(review => (
-                <div key={review._id} className="mb-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden">
-                      <img src={`https://ui-avatars.com/api/?name=${review.author?.username || 'G'}&background=random`} alt="Avatar" className="w-full h-full object-cover"/>
-                    </div>
+                <div key={review._id}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="h-12 w-12 rounded-full overflow-hidden bg-gray-200"><img src={`https://ui-avatars.com/api/?name=${review.author?.username || 'G'}&background=random`} alt="Avatar" className="w-full h-full object-cover"/></div>
                     <div>
-                      <h4 className="font-semibold">{review.author?.username || 'Guest'}</h4>
-                      <p className="text-gray-500 text-sm">
-                         {new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                      </p>
+                      <h4 className="font-semibold text-[16px]">{review.author?.username || 'Guest'}</h4>
+                      <p className="text-gray-500 text-sm">{new Date(review.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-1 mb-2">
-                     {[...Array(5)].map((_, i) => (
-                       <Star key={i} size={12} fill={i < review.rating ? 'currentColor' : 'none'} className={i < review.rating ? 'text-gray-900' : 'text-gray-300'} />
-                     ))}
+                     {[...Array(5)].map((_, i) => (<Star key={i} size={10} fill={i < review.rating ? 'currentColor' : 'none'} className={i < review.rating ? 'text-gray-900' : 'text-gray-300'} />))}
                   </div>
-                  <p className="text-gray-700 leading-relaxed">{review.comment}</p>
-                  
-                  {/* Delete Review Button (if author) */}
-                  {isLoggedIn && user && review.author?._id === user._id && (
-                     <button onClick={() => handleDeleteReview(review._id)} className="text-sm font-semibold text-red-500 hover:underline mt-2">Delete Review</button>
-                  )}
+                  <p className="text-gray-800 leading-relaxed text-[16px]">{review.comment}</p>
+                  {isLoggedIn && user && review.author?._id === user._id && (<button onClick={() => handleDeleteReview(review._id)} className="text-sm font-semibold text-red-500 hover:underline mt-3">Delete</button>)}
                 </div>
               ))}
             </div>
 
-            {/* Add Review Form */}
-            {isLoggedIn ? (
-              <div className="mt-8 bg-gray-50 p-6 rounded-2xl border border-gray-200">
-                <h3 className="text-lg font-bold mb-4">Leave a Review</h3>
-                <form onSubmit={handleReviewSubmit}>
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold mb-2">Rating</label>
-                    <div className="flex gap-2">
-                       {[1, 2, 3, 4, 5].map(star => (
-                         <button 
-                           key={star} type="button" 
-                           onClick={() => setReviewRating(star)}
-                           className={`p-2 rounded-full transition ${reviewRating >= star ? 'bg-black text-white' : 'bg-gray-200 text-gray-500 hover:bg-gray-300'}`}
-                         >
-                           <Star size={20} fill={reviewRating >= star ? 'currentColor' : 'none'} />
-                         </button>
-                       ))}
-                    </div>
+            <div className="mt-12">
+              <h3 className="text-lg font-bold mb-4">Leave a Review</h3>
+              <form onSubmit={handleReviewSubmit} className="bg-gray-50 p-6 rounded-2xl border border-gray-200">
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold mb-2">Rating</label>
+                  <div className="flex gap-2">
+                     {[1, 2, 3, 4, 5].map(star => (
+                       <button key={star} type="button" onClick={() => setReviewRating(star)} className={`p-2 rounded-full transition ${reviewRating >= star ? 'bg-black text-white' : 'bg-gray-200 text-gray-500'}`}><Star size={20} fill={reviewRating >= star ? 'currentColor' : 'none'} /></button>
+                     ))}
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-sm font-semibold mb-2">Your review</label>
-                    <textarea 
-                      value={reviewComment} 
-                      onChange={(e) => setReviewComment(e.target.value)}
-                      required
-                      placeholder="Share your experience..."
-                      className="w-full p-4 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-black focus:border-black"
-                      rows="3"
-                    ></textarea>
-                  </div>
-                  <button type="submit" disabled={isSubmittingReview} className={`bg-black text-white px-6 py-3 rounded-xl font-semibold transition ${isSubmittingReview ? 'opacity-50' : 'hover:bg-gray-800'}`}>
-                    {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
-                  </button>
-                </form>
-              </div>
-            ) : (
-              <div className="mt-8 bg-gray-50 p-6 rounded-2xl border border-gray-200 text-center">
-                <p className="text-gray-700 mb-3">Log in to leave a review</p>
-                <Link to="/login" className="inline-block border border-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">Log in</Link>
-              </div>
-            )}
+                </div>
+                <div className="mb-4">
+                  <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} required placeholder="Share your experience..." className="w-full p-4 border border-gray-300 rounded-xl outline-none focus:ring-2 focus:ring-black" rows="3"></textarea>
+                </div>
+                <button type="submit" disabled={isSubmittingReview} className="bg-black text-white px-6 py-3 rounded-xl font-bold transition hover:bg-gray-800">{isSubmittingReview ? 'Submitting...' : 'Submit Review'}</button>
+              </form>
+            </div>
           </div>
         </div>
 
         {/* Right Content - Booking Widget */}
-        <div className="lg:col-span-1 relative">
-          <div className="sticky top-28 bg-white border border-gray-200 rounded-2xl shadow-xl p-6">
-            <div className="flex justify-between items-end mb-6">
-              <div>
-                <span className="text-2xl font-bold">{formatPrice(listing.price)}</span>
-                <span className="text-gray-500"> {t('night')}</span>
-              </div>
-              <div className="text-sm font-medium underline">
-                <Star size={14} className="inline mr-1" fill="currentColor"/>{averageRating} · {listing.reviews?.length || 0} reviews
-              </div>
+        <div className="lg:col-span-1 relative mt-8 lg:mt-0">
+          <div className="sticky top-28 bg-white border border-gray-300 rounded-2xl p-6 shadow-xl w-full">
+            <div className="flex items-baseline mb-6 gap-1">
+              <span className="text-[22px] font-semibold">{formatPrice(listing.price)}</span>
+              <span className="text-gray-800 text-[16px]"> night</span>
             </div>
 
-            <div className="border border-gray-400 rounded-xl mb-4 overflow-hidden">
+            <div className="border border-gray-400 rounded-xl mb-4 overflow-hidden focus-within:border-black focus-within:border-[2px]">
               <div className="flex border-b border-gray-400">
-                <div className="w-1/2 p-3 border-r border-gray-400">
-                  <label className="block text-[10px] font-bold uppercase text-gray-800">Check-In</label>
-                  <input type="date" value={checkIn} min={getToday()} onChange={e => handleCheckInChange(e.target.value)} className="w-full outline-none text-sm cursor-pointer mt-1" />
+                <div className="w-1/2 p-3 border-r border-gray-400 relative">
+                  <label className="block text-[10px] font-bold uppercase text-gray-900 tracking-wider">Check-In</label>
+                  <input type="date" value={checkIn} min={getToday()} onChange={e => handleCheckInChange(e.target.value)} className="w-full outline-none text-sm cursor-pointer mt-1 font-medium bg-transparent" />
                 </div>
-                <div className="w-1/2 p-3">
-                  <label className="block text-[10px] font-bold uppercase text-gray-800">Check-Out</label>
-                  <input type="date" value={checkOut} min={checkIn ? getNextDay(checkIn) : getToday()} onChange={e => setCheckOut(e.target.value)} className={`w-full outline-none text-sm mt-1 ${!checkIn ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`} disabled={!checkIn} />
+                <div className="w-1/2 p-3 relative">
+                  <label className="block text-[10px] font-bold uppercase text-gray-900 tracking-wider">Check-Out</label>
+                  <input type="date" value={checkOut} min={checkIn ? getNextDay(checkIn) : getToday()} onChange={e => setCheckOut(e.target.value)} className={`w-full outline-none text-sm mt-1 font-medium bg-transparent ${!checkIn ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`} disabled={!checkIn} />
                 </div>
               </div>
-              <div className="p-3">
-                <label className="block text-[10px] font-bold uppercase text-gray-800">Guests</label>
-                <select value={guests} onChange={e => setGuests(e.target.value)} className="w-full outline-none text-sm cursor-pointer mt-1 bg-transparent">
+              <div className="p-3 relative">
+                <label className="block text-[10px] font-bold uppercase text-gray-900 tracking-wider">Guests</label>
+                <select value={guests} onChange={e => setGuests(e.target.value)} className="w-full outline-none text-sm cursor-pointer mt-1 font-medium bg-transparent appearance-none">
                   {Array.from({ length: listing.maxGuests || 10 }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n} guest{n > 1 ? 's' : ''}</option>)}
                 </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', fill: 'none', height: '16px', width: '16px', stroke: 'currentcolor', strokeWidth: 4, overflow: 'visible' }}><g fill="none"><path d="m28 12-11.2928932 11.2928932c-.3905243.3905243-1.0236893.3905243-1.4142136 0l-11.2928932-11.2928932"></path></g></svg>
+                </div>
               </div>
             </div>
 
-            {pricingError && <p className="text-red-500 text-sm mb-3">{pricingError}</p>}
+            {pricingError && <p className="text-red-500 text-sm mb-3 font-medium">{pricingError}</p>}
+
+            <button onClick={handleReserve} className={`w-full text-white font-bold py-3.5 rounded-lg transition text-[16px] mb-4 ${canReserve ? 'bg-gradient-to-r from-[#E61E4D] to-[#D70466] hover:opacity-95 cursor-pointer' : 'bg-gray-300 cursor-not-allowed'}`}>
+              {!checkIn ? 'Check availability' : !pricing ? 'Check availability' : 'Reserve'}
+            </button>
+            <p className="text-center text-sm text-gray-600 font-medium mb-6">{canReserve ? "You won't be charged yet" : 'Enter dates and guests to check availability'}</p>
 
             {pricing && (
-              <div className="mb-4 space-y-3 text-gray-700">
+              <div className="space-y-4 text-gray-800 text-[16px]">
                 <div className="flex justify-between">
-                  <span className="underline">{formatPrice(listing.price)} x {pricing.nights} {t('night')} x {guests} guest{guests > 1 ? 's' : ''}</span>
+                  <span className="underline">{formatPrice(listing.price)} x {pricing.nights} night{pricing.nights > 1 ? 's' : ''}</span>
                   <span>{formatPrice(pricing.basePrice)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="underline">Cleaning fee</span>
-                  <span>{formatPrice(0)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="underline">WanderLodge service fee</span>
@@ -569,18 +419,13 @@ const ListingDetails = () => {
                   <span className="underline">Taxes (18%)</span>
                   <span>{formatPrice(pricing.tax)}</span>
                 </div>
-                <hr className="my-4 border-gray-300" />
-                <div className="flex justify-between font-bold text-lg text-black">
-                  <span>Total</span>
+                <hr className="my-6 border-gray-200" />
+                <div className="flex justify-between font-bold text-[16px] text-gray-900">
+                  <span>Total before taxes</span>
                   <span>{formatPrice(pricing.totalPrice)}</span>
                 </div>
               </div>
             )}
-
-            <button onClick={handleReserve} disabled={!canReserve} className={`w-full text-white font-bold py-3 rounded-lg transition ${canReserve ? 'bg-airbnb hover:bg-airbnb-dark cursor-pointer' : 'bg-gray-300 cursor-not-allowed'}`}>
-              {!checkIn ? 'Select dates to Reserve' : !pricing ? 'Check availability' : 'Reserve'}
-            </button>
-            <p className="text-center text-sm text-gray-500 mt-4">{canReserve ? "You won't be charged yet" : 'Pick check-in date first, then check-out'}</p>
           </div>
         </div>
       </div>
