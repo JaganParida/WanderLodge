@@ -37,17 +37,17 @@ const seedData = [
     geometry: { type: "Point", coordinates: [-106.8175, 39.1911] }
   },
   {
-    title: "Luxury Beachfront Villa with Infinity Pool",
-    description: "Experience ultimate luxury in this stunning villa featuring a private infinity pool overlooking the ocean. Perfect for family vacations. The space includes a fully equipped kitchen, high-speed WiFi, and daily housekeeping.",
+    title: "Luxury Beachfront Villa",
+    description: "Experience ultimate luxury in this modern beachfront villa. Infinity pool overlooking the ocean, private chef available, and direct beach access. Sunsets here are truly magical.",
     image: {
       url: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=1000&auto=format&fit=crop",
-      filename: "beachfront_villa"
+      filename: "beach_villa"
     },
     price: 45000,
-    location: "Uluwatu, Bali",
+    location: "Bali, Indonesia",
     country: "Indonesia",
     category: "Beachfront",
-    amenities: ["WiFi", "Pool", "Air conditioning", "Kitchen", "Ocean view", "TV"],
+    amenities: ["Pool", "WiFi", "Air conditioning", "Beach access", "Breakfast included"],
     maxGuests: 8,
     bedrooms: 4,
     beds: 5,
@@ -65,7 +65,7 @@ const seedData = [
     location: "Inverness, Scotland",
     country: "United Kingdom",
     category: "Castles",
-    amenities: ["WiFi", "Kitchen", "Indoor fireplace", "Free parking", "Dedicated workspace"],
+    amenities: ["Indoor fireplace", "Heating", "Kitchen", "Free parking", "Dedicated workspace"],
     maxGuests: 12,
     bedrooms: 6,
     beds: 8,
@@ -80,10 +80,10 @@ const seedData = [
       filename: "nyc_loft"
     },
     price: 22000,
-    location: "New York City, New York",
+    location: "New York City, NY",
     country: "United States",
     category: "City",
-    amenities: ["WiFi", "Air conditioning", "Kitchen", "TV", "Elevator", "Gym"],
+    amenities: ["WiFi", "Air conditioning", "Kitchen", "Gym", "Elevator"],
     maxGuests: 4,
     bedrooms: 2,
     beds: 2,
@@ -91,53 +91,17 @@ const seedData = [
     geometry: { type: "Point", coordinates: [-74.0060, 40.7128] }
   },
   {
-    title: "Serene Lakefront A-Frame",
-    description: "Cozy A-frame cabin perched right on the edge of a crystal-clear lake. Includes private dock, canoes, and a wraparound deck for sunset viewing. The perfect digital detox.",
+    title: "Rustic Farmhouse Retreat",
+    description: "Escape the city to this charming organic farm. Feed the animals, collect fresh eggs, and relax on the wrap-around porch. A perfect family getaway.",
     image: {
       url: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000&auto=format&fit=crop",
-      filename: "lakefront_aframe"
+      filename: "rustic_farm"
     },
     price: 15500,
-    location: "Lake Tahoe, California",
-    country: "United States",
-    category: "Lakefront",
-    amenities: ["Kitchen", "Indoor fireplace", "Free parking", "Lake access"],
-    maxGuests: 4,
-    bedrooms: 2,
-    beds: 3,
-    rating: 0,
-    geometry: { type: "Point", coordinates: [-120.0324, 39.0968] }
-  },
-  {
-    title: "Magical Treehouse Retreat",
-    description: "Sleep amongst the canopy in this incredible treehouse. Features a suspension bridge, cozy interior, and an outdoor shower. Featured in multiple design magazines.",
-    image: {
-      url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1000&auto=format&fit=crop",
-      filename: "treehouse"
-    },
-    price: 28000,
-    location: "Tulum, Quintana Roo",
-    country: "Mexico",
-    category: "OMG!",
-    amenities: ["WiFi", "Air conditioning", "Outdoor shower", "Free parking"],
-    maxGuests: 2,
-    bedrooms: 1,
-    beds: 1,
-    rating: 0,
-    geometry: { type: "Point", coordinates: [-87.4654, 20.2114] }
-  },
-  {
-    title: "Charming Tuscan Farmhouse",
-    description: "Authentic stone farmhouse surrounded by rolling hills and vineyards. Enjoy fresh local produce, a private pool, and outdoor dining under the pergola.",
-    image: {
-      url: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1000&auto=format&fit=crop",
-      filename: "tuscan_farmhouse"
-    },
-    price: 32000,
-    location: "Florence, Tuscany",
+    location: "Tuscany, Italy",
     country: "Italy",
     category: "Farms",
-    amenities: ["WiFi", "Pool", "Kitchen", "Free parking", "BBQ grill"],
+    amenities: ["Kitchen", "Indoor fireplace", "BBQ grill", "Outdoor dining area", "Washing machine"],
     maxGuests: 6,
     bedrooms: 3,
     beds: 4,
@@ -145,44 +109,80 @@ const seedData = [
     geometry: { type: "Point", coordinates: [11.2558, 43.7696] }
   },
   {
-    title: "Minimalist Tiny Home in the Desert",
-    description: "Experience off-grid living in this stunning tiny home. Stargaze from the outdoor tub. Modern amenities in a compact, eco-friendly package.",
+    title: "Serene Lakefront Cabin",
+    description: "Wake up to calm waters and mountain views. This cozy A-frame cabin offers a private dock, kayaks, and a wood-burning stove. Ideal for a peaceful retreat.",
     image: {
-      url: "https://images.unsplash.com/photo-1534008897995-27a23e859048?q=80&w=1000&auto=format&fit=crop",
-      filename: "desert_tiny_home"
+      url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1000&auto=format&fit=crop",
+      filename: "lake_cabin"
     },
-    price: 11000,
-    location: "Joshua Tree, California",
+    price: 12000,
+    location: "Lake Tahoe, CA",
     country: "United States",
-    category: "Tiny homes",
-    amenities: ["Air conditioning", "Kitchen", "Free parking", "Fire pit"],
+    category: "Lakefront",
+    amenities: ["Lake access", "WiFi", "Kitchen", "Indoor fireplace", "Patio or balcony"],
+    maxGuests: 4,
+    bedrooms: 2,
+    beds: 3,
+    rating: 0,
+    geometry: { type: "Point", coordinates: [-120.0324, 39.0968] }
+  },
+  {
+    title: "Eco-Friendly Treehouse",
+    description: "Sleep among the canopy in this unique, sustainable treehouse. Features a wraparound deck, outdoor shower, and breathtaking jungle views. An adventurer's dream.",
+    image: {
+      url: "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1000&auto=format&fit=crop",
+      filename: "treehouse"
+    },
+    price: 9500,
+    location: "Tulum, Quintana Roo",
+    country: "Mexico",
+    category: "OMG!",
+    amenities: ["WiFi", "Free parking", "Outdoor shower", "Balcony", "Breakfast included"],
     maxGuests: 2,
     bedrooms: 1,
     beds: 1,
     rating: 0,
-    geometry: { type: "Point", coordinates: [-116.3131, 34.1347] }
+    geometry: { type: "Point", coordinates: [-87.4654, 20.2114] }
   },
   {
-    title: "Spectacular Cliffside Villa with Infinity Pool",
-    description: "Jaw-dropping views from every room. This modern architectural masterpiece features a massive infinity pool that blends into the Aegean Sea.",
+    title: "Luxury Desert Oasis",
+    description: "Experience the magic of the desert in this ultra-modern oasis. Features a stunning infinity pool, fire pit lounge, and stargazing deck. Minimalist luxury at its finest.",
     image: {
-      url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop",
-      filename: "santorini_pool"
+      url: "https://images.unsplash.com/photo-1534008897995-27a23e859048?q=80&w=1000&auto=format&fit=crop",
+      filename: "desert_oasis"
     },
-    price: 65000,
-    location: "Santorini, South Aegean",
-    country: "Greece",
+    price: 35000,
+    location: "Joshua Tree, CA",
+    country: "United States",
     category: "Pools",
-    amenities: ["WiFi", "Pool", "Air conditioning", "Kitchen", "Ocean view"],
+    amenities: ["Pool", "Hot tub", "Air conditioning", "WiFi", "Kitchen"],
     maxGuests: 4,
     bedrooms: 2,
     beds: 2,
     rating: 0,
+    geometry: { type: "Point", coordinates: [-116.3131, 34.1347] }
+  },
+  {
+    title: "Charming Santorini Cave House",
+    description: "Stay in a traditional caldera cave house with stunning Aegean Sea views. Private terrace, plunge pool, and authentic Greek architecture. A romantic Mediterranean escape.",
+    image: {
+      url: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop",
+      filename: "santorini_cave"
+    },
+    price: 28000,
+    location: "Oia, South Aegean",
+    country: "Greece",
+    category: "OMG!",
+    amenities: ["Pool", "Sea view", "WiFi", "Air conditioning", "Kitchen"],
+    maxGuests: 2,
+    bedrooms: 1,
+    beds: 1,
+    rating: 0,
     geometry: { type: "Point", coordinates: [25.4315, 36.3932] }
   },
   {
-    title: "Modern Alpine Ski Chalet",
-    description: "Ski-in, ski-out access. Unwind in the sauna after a day on the slopes. Features massive floor-to-ceiling windows overlooking the snow-capped peaks.",
+    title: "Alpine Ski Chalet",
+    description: "Hit the slopes directly from this ski-in/ski-out luxury chalet. Features a sauna, vaulted ceilings, and panoramic mountain views. The ultimate winter getaway.",
     image: {
       url: "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1000&auto=format&fit=crop",
       filename: "ski_chalet"
@@ -201,26 +201,48 @@ const seedData = [
 ];
 
 const seedDB = async () => {
-  // Try to find a user to own these listings
-  let owner = await User.findOne({ role: 'host' });
-  if (!owner) {
-    owner = await User.findOne();
-  }
+  // Try to find elitehost1 and elitehost2
+  let host1 = await User.findOne({ username: 'elitehost1' });
+  let host2 = await User.findOne({ username: 'elitehost2' });
   
-  if (!owner) {
-    console.log("No user found. Please create a user/host first via the frontend.");
-    process.exit(1);
+  if (!host1 || !host2) {
+      console.log("Hosts elitehost1 and elitehost2 not found. Fallback to any two hosts.");
+      const hosts = await User.find({ role: 'host' }).limit(2);
+      if (hosts.length >= 2) {
+          host1 = hosts[0];
+          host2 = hosts[1];
+      } else if (hosts.length === 1) {
+          host1 = hosts[0];
+          host2 = hosts[0]; // fallback
+      } else {
+          console.log("No hosts found. Please create elitehost1 and elitehost2 first via the frontend.");
+          process.exit(1);
+      }
   }
 
   await Listing.deleteMany({});
   
-  const formattedData = seedData.map(obj => ({
+  // Create 10 more listings to reach 20 total
+  const additionalData = seedData.map((obj, i) => ({
+      ...obj,
+      title: obj.title + " (Premium)",
+      price: obj.price + 5000,
+      image: {
+          ...obj.image,
+          url: obj.image.url.replace('q=80', 'q=90') // slightly different URL params just to be distinct
+      }
+  }));
+
+  const allData = [...seedData, ...additionalData];
+
+  // First 10 to host1, Next 10 to host2
+  const formattedData = allData.map((obj, i) => ({
     ...obj,
-    owner: owner._id
+    owner: i < 10 ? host1._id : host2._id
   }));
 
   await Listing.insertMany(formattedData);
-  console.log("Database seeded successfully with realistic Airbnb data!");
+  console.log("Database seeded successfully with 20 listings! 10 for host1, 10 for host2.");
   mongoose.connection.close();
 };
 
