@@ -44,7 +44,7 @@ const TicketCard = ({ booking, id }) => {
             {booking.listing?.location?.split(',')[0] || 'DESTINATION'}
           </div>
           <div style={{ fontSize: '22px', fontWeight: 900, color: '#e8c99b', textTransform: 'uppercase', lineHeight: 1.3, letterSpacing: '-0.02em', marginBottom: '20px', maxWidth: '320px' }}>
-            {booking.listing?.title || 'LUXURY STAY'}
+            {booking.listing?.title || 'Listing Unavailable'}
           </div>
           <div style={{ display: 'inline-flex', alignItems: 'center', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', fontWeight: 700, fontSize: '12px', padding: '6px 16px', borderRadius: '6px', textTransform: 'uppercase', letterSpacing: '0.08em', width: 'fit-content' }}>
             {new Date(booking.checkIn).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -394,7 +394,7 @@ const Dashboard = () => {
                       <div className="flex gap-4 sm:gap-6 items-center w-full md:w-auto">
                         <img src={booking.listing?.images?.[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=200'} alt="Listing" className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg shadow-sm shrink-0" />
                         <div>
-                          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1">{booking.listing?.title || 'Luxury Stay'}</h3>
+                          <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1">{booking.listing?.title || 'Listing Unavailable'}</h3>
                           <p className="text-gray-500 text-xs sm:text-sm mb-2">{booking.listing?.location}</p>
                           <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700 bg-gray-100 px-3 py-1 rounded-full w-max font-medium">
                             <Calendar size={14} className="text-airbnb" />

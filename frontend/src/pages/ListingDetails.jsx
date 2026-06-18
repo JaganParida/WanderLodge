@@ -274,17 +274,19 @@ const ListingDetails = () => {
             <div className="flex gap-5 items-start">
               <Award className="flex-shrink-0" size={28} strokeWidth={1.5} />
               <div>
-                <h3 className="font-semibold text-lg">{listing.owner?.username || 'Superhost'} is a Superhost</h3>
-                <p className="text-gray-500 text-[15px] mt-1">Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.</p>
+                <h3 className="font-semibold text-lg">{listing.owner?.username || 'Host'} is a highly rated host</h3>
+                <p className="text-gray-500 text-[15px] mt-1">Highly rated hosts are experienced and committed to providing great stays for guests.</p>
               </div>
             </div>
-            <div className="flex gap-5 items-start">
-              <Key className="flex-shrink-0" size={28} strokeWidth={1.5} />
-              <div>
-                <h3 className="font-semibold text-lg">Great check-in experience</h3>
-                <p className="text-gray-500 text-[15px] mt-1">100% of recent guests gave the check-in process a 5-star rating.</p>
+            {averageRating >= 4.8 && (
+              <div className="flex gap-5 items-start">
+                <Key className="flex-shrink-0" size={28} strokeWidth={1.5} />
+                <div>
+                  <h3 className="font-semibold text-lg">Great check-in experience</h3>
+                  <p className="text-gray-500 text-[15px] mt-1">Recent guests gave the check-in process high ratings.</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Description */}
