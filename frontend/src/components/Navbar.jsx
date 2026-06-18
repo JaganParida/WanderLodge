@@ -150,33 +150,33 @@ const Navbar = () => {
 
         {/* Expanded Big Search Bar */}
         {isSearchExpanded && (
-          <div className="hidden md:block absolute top-20 left-0 right-0 bg-white pb-6 z-50">
+          <div className="absolute top-20 left-0 right-0 bg-white pb-6 z-50">
              <div className="max-w-4xl mx-auto mt-2">
-                <form onSubmit={handleSearchSubmit} className="flex items-center bg-white border border-gray-300 rounded-full shadow-lg relative">
-                   <div className="flex-1 px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition">
+                <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row items-center bg-white md:border border-gray-300 md:rounded-full md:shadow-lg relative px-4 md:px-0 gap-4 md:gap-0">
+                   <div className="w-full md:flex-1 px-4 md:px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition border border-gray-300 md:border-0">
                       <label className="block text-xs font-bold text-gray-800">Where</label>
                       <input type="text" value={searchLocation} onChange={(e) => setSearchLocation(e.target.value)} placeholder="Search destinations" className="w-full bg-transparent outline-none text-sm placeholder-gray-500" />
                    </div>
-                   <div className="w-px h-10 bg-gray-300"></div>
-                   <div className="flex-1 px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition">
+                   <div className="hidden md:block w-px h-10 bg-gray-300"></div>
+                   <div className="w-full md:flex-1 px-4 md:px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition border border-gray-300 md:border-0">
                       <label className="block text-xs font-bold text-gray-800">Check in</label>
                       <input type="date" value={searchCheckIn} onChange={(e) => setSearchCheckIn(e.target.value)} min={new Date().toISOString().split('T')[0]} className="w-full bg-transparent outline-none text-sm text-gray-600 cursor-pointer" />
                    </div>
-                   <div className="w-px h-10 bg-gray-300"></div>
-                   <div className="flex-1 px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition">
+                   <div className="hidden md:block w-px h-10 bg-gray-300"></div>
+                   <div className="w-full md:flex-1 px-4 md:px-8 py-3 hover:bg-gray-100 rounded-full cursor-pointer transition border border-gray-300 md:border-0">
                       <label className="block text-xs font-bold text-gray-800">Check out</label>
                       <input type="date" value={searchCheckOut} onChange={(e) => setSearchCheckOut(e.target.value)} min={searchCheckIn || new Date().toISOString().split('T')[0]} className="w-full bg-transparent outline-none text-sm text-gray-600 cursor-pointer" />
                    </div>
-                   <div className="w-px h-10 bg-gray-300"></div>
-                   <div className="flex-[1.2] pl-8 pr-2 py-2 hover:bg-gray-100 rounded-full cursor-pointer transition flex justify-between items-center">
-                      <div>
+                   <div className="hidden md:block w-px h-10 bg-gray-300"></div>
+                   <div className="w-full md:flex-[1.2] pl-4 md:pl-8 pr-2 py-2 hover:bg-gray-100 rounded-full cursor-pointer transition flex justify-between items-center border border-gray-300 md:border-0">
+                      <div className="flex-1">
                         <label className="block text-xs font-bold text-gray-800">Who</label>
                         <select value={searchGuests} onChange={(e) => setSearchGuests(Number(e.target.value))} className="w-full bg-transparent outline-none text-sm text-gray-600 appearance-none cursor-pointer">
                            {[1,2,3,4,5,6,7,8,9,10].map(n => <option key={n} value={n}>{n === 1 ? 'Add guests' : `${n} guests`}</option>)}
                         </select>
                       </div>
-                      <button type="submit" className="bg-airbnb hover:bg-airbnb-dark text-white rounded-full p-3 flex items-center gap-2 font-bold transition">
-                         <Search size={20} strokeWidth={3} /> Search
+                      <button type="submit" className="bg-airbnb hover:bg-airbnb-dark text-white rounded-full p-3 flex items-center justify-center gap-2 font-bold transition md:ml-2">
+                         <Search size={20} strokeWidth={3} /> <span className="md:hidden">Search</span>
                       </button>
                    </div>
                 </form>
