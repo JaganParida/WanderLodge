@@ -56,7 +56,7 @@ const Home = () => {
     
     axios.get(url)
       .then(res => {
-        setListings(res.data);
+        setListings(Array.isArray(res.data) ? res.data : (res.data?.listings || []));
       })
       .catch(err => {
         console.error("Error fetching listings:", err.message);
@@ -70,7 +70,9 @@ const Home = () => {
     if (isLoggedIn) {
        axios.get('/api/dashboard', { timeout: 3000 })
          .then(res => {
-            if(res.data.wishlist) setWishlistIds(res.data.wishlist.map(w => w._id || w));
+           if(res.data.wishlist && Array.isArray(res.data.wishlist)) {
+             setWishlistIds(res.data.wishlist.map(w => w._id || w));
+           }
          })
          .catch(console.error);
     }
