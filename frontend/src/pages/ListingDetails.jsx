@@ -238,7 +238,23 @@ const ListingDetails = () => {
         </div>
       </div>
 
-      {/* Airbnb-style Photo Grid */}
+      {/* Mobile Photo Viewer */}
+      <div className="md:hidden relative w-[100vw] h-[300px] -mx-4 sm:-mx-6 mb-6">
+        <img 
+           src={displayImages[0]} 
+           alt="Main" 
+           className="w-full h-full object-cover cursor-pointer" 
+           onClick={() => setShowPhotoTour(true)} 
+        />
+        <button 
+           onClick={() => setShowPhotoTour(true)} 
+           className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-lg text-sm font-semibold backdrop-blur-sm"
+        >
+          1 / {listing.images?.length || 1}
+        </button>
+      </div>
+
+      {/* Airbnb-style Photo Grid (Desktop) */}
       <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[50vh] min-h-[400px] max-h-[500px] mb-8 relative rounded-2xl overflow-hidden">
         <div className="col-span-2 row-span-2 h-full cursor-pointer overflow-hidden group">
           <img src={displayImages[0]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />

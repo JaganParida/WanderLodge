@@ -171,37 +171,50 @@ const Home = () => {
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} message="Log in to add to wishlist" />
 
       {/* Category Filters */}
-      <div className="flex overflow-x-auto gap-8 pb-4 mb-6 scrollbar-hide border-b border-gray-100 items-center">
-        <div 
-           onClick={() => setSelectedCategory('All')} 
-           className={`flex flex-col items-center gap-2 cursor-pointer transition flex-shrink-0 border-b-2 pb-2 ${selectedCategory === 'All' ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'}`}
-        >
-          <HomeIcon size={24} />
-          <span className="text-sm font-medium whitespace-nowrap">{t('All')}</span>
+      <div className="flex items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-2">
+        <div className="flex-1 flex overflow-x-auto gap-8 scrollbar-hide items-center pr-4">
+          <div 
+             onClick={() => setSelectedCategory('All')} 
+             className={`flex flex-col items-center gap-2 cursor-pointer transition flex-shrink-0 border-b-2 pb-2 mt-2 ${selectedCategory === 'All' ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'}`}
+          >
+            <HomeIcon size={24} />
+            <span className="text-sm font-medium whitespace-nowrap">{t('All')}</span>
+          </div>
+          {CATEGORIES.map(cat => {
+            const Icon = cat.icon;
+            const isActive = selectedCategory === cat.label;
+            return (
+              <div 
+                key={cat.label} 
+                onClick={() => setSelectedCategory(cat.label)}
+                className={`flex flex-col items-center gap-2 cursor-pointer transition flex-shrink-0 border-b-2 pb-2 mt-2 ${isActive ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'}`}
+              >
+                <Icon size={24} className={isActive ? 'text-black' : 'text-gray-500'} />
+                <span className={`text-sm whitespace-nowrap ${isActive ? 'font-medium' : ''}`}>{t(cat.label)}</span>
+              </div>
+            );
+          })}
         </div>
-        {CATEGORIES.map(cat => {
-          const Icon = cat.icon;
-          const isActive = selectedCategory === cat.label;
-          return (
-            <div 
-              key={cat.label} 
-              onClick={() => setSelectedCategory(cat.label)}
-              className={`flex flex-col items-center gap-2 cursor-pointer transition flex-shrink-0 border-b-2 pb-2 ${isActive ? 'border-black text-black' : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'}`}
-            >
-              <Icon size={24} className={isActive ? 'text-black' : 'text-gray-500'} />
-              <span className={`text-sm whitespace-nowrap ${isActive ? 'font-medium' : ''}`}>{t(cat.label)}</span>
-            </div>
-          );
-        })}
-        <div className="ml-auto pl-4">
+        <div className="hidden md:block flex-shrink-0 ml-4 pb-2">
            <button 
             onClick={openFilterModal}
-            className="flex items-center gap-2 border border-gray-300 rounded-xl px-4 py-2 hover:border-black hover:bg-gray-50 transition font-semibold text-sm h-12 ml-4 flex-shrink-0"
+            className="flex items-center gap-2 border border-gray-300 rounded-xl px-4 py-2 hover:border-black hover:bg-gray-50 transition font-semibold text-sm h-12 flex-shrink-0 shadow-sm"
           >
             <SlidersHorizontal size={16} />
             {t('Filters')}
           </button>
         </div>
+      </div>
+      
+      {/* Mobile Filter Button */}
+      <div className="md:hidden flex justify-center mb-6">
+         <button 
+            onClick={openFilterModal}
+            className="flex items-center justify-center gap-2 border border-gray-300 rounded-full px-6 py-2 hover:bg-gray-50 transition font-semibold text-sm shadow-sm w-full max-w-[200px]"
+          >
+            <SlidersHorizontal size={16} />
+            {t('Filters')}
+          </button>
       </div>
 
       {/* Search Header */}
