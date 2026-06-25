@@ -42,14 +42,14 @@ export const AuthProvider = ({ children }) => {
     const currentCode = match ? match[1] : 'en';
 
     if (currentCode !== targetCode) {
-      if (targetCode === 'en') {
-         document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
-         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
-      } else {
+      // First, systematically CLEAR all possible variations of the old cookie
+      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
+
+      // Then, set the new cookie (only if not English, since English is default)
+      if (targetCode !== 'en') {
          document.cookie = `googtrans=/en/${targetCode}; path=/;`;
-         document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
-         document.cookie = `googtrans=/en/${targetCode}; path=/; domain=.${window.location.hostname}`;
       }
       
       // Auto-refresh to ensure pristine translation application without glitching
