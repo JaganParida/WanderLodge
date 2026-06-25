@@ -6,19 +6,33 @@ const Booking = require("../models/booking");
 module.exports.renderProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).populate({
+            path: 'bookings',
+            populate: {
+                path: 'listing',
+                populate: { path: 'reviews', select: 'rating' }
+            }
+        }).populate({
             path: 'wishlist',
-            model: 'Listing'
+            populate: { path: 'reviews', select: 'rating' }
         });
-
+        
         const myBookings = await Booking.find({ user: req.user._id })
-            .populate('listing')
+            .populate({
+                path: 'listing',
+                populate: { path: 'reviews', select: 'rating' }
+            })
             .sort({ createdAt: -1 });
 
-        const myListings = await Listing.find({ owner: req.user._id });
+        const myListings = await Listing.find({ owner: req.user._id })
+            .populate({ path: 'reviews', select: 'rating' });
         const myListingIds = myListings.map(listing => listing._id);
 
         const hostReservations = await Booking.find({ listing: { $in: myListingIds } })
-            .populate('listing', 'title images')
+            .populate({
+                path: 'listing',
+                select: 'title images price location reviews',
+                populate: { path: 'reviews', select: 'rating' }
+            })
             .populate('user', 'username email')
             .sort({ createdAt: -1 });
 

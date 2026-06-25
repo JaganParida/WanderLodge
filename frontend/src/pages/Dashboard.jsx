@@ -450,7 +450,8 @@ const Dashboard = () => {
                       <p className="text-sm text-gray-500 mb-2">{listing.location}</p>
                       <div className="flex justify-between items-center">
                         <p className="font-bold text-airbnb">₹{listing.price?.toLocaleString('en-IN')} <span className="font-normal text-gray-500 text-sm">/ night</span></p>
-                        {listing.rating && <span className="text-sm font-medium">⭐ {listing.rating}</span>}
+                        {listing.reviews?.length > 0 && <span className="text-sm font-medium">⭐ {(listing.reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / listing.reviews.length).toFixed(2)}</span>}
+                        {(!listing.reviews || listing.reviews.length === 0) && <span className="text-sm font-medium text-gray-500">⭐ New</span>}
                       </div>
                     </div>
                   </div>

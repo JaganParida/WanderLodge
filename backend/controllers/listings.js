@@ -71,7 +71,9 @@ module.exports.index = async (req, res) => {
       }
     }
 
-    const allListings = await Listing.find(query).populate("owner", "username email");
+    const allListings = await Listing.find(query)
+      .populate("owner", "username email")
+      .populate({ path: "reviews", select: "rating" });
     res.json(allListings);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch listings" });

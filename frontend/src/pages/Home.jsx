@@ -272,7 +272,11 @@ const Home = () => {
               <h3 className="font-semibold text-[15px] truncate pr-4">{listing.location}, {listing.country}</h3>
               <div className="flex items-center gap-1 text-[15px]">
                 <Star size={14} fill="currentColor" />
-                <span>{listing.rating > 0 ? listing.rating.toFixed(2) : t('New')}</span>
+                <span>
+                  {listing.reviews?.length > 0 
+                    ? (listing.reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / listing.reviews.length).toFixed(2) 
+                    : t('New')}
+                </span>
               </div>
             </div>
             <p className="text-gray-500 text-[15px] truncate">{t('Hosted by')} {listing.owner?.username || 'Unknown Host'}</p>
