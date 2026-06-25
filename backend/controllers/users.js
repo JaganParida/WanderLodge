@@ -1,6 +1,7 @@
 const User = require("../models/user.js");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 const generateToken = (user) => {
     return jwt.sign({ _id: user._id, username: user.username, email: user.email, role: user.role }, process.env.SECRET, {
@@ -147,15 +148,60 @@ module.exports.forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Since there's no SMTP setup, we simulate email sending by logging it.
-    console.log(`\n======================================================`);
-    console.log(`[SIMULATED EMAIL] Forgot Password Request for ${email}`);
-    console.log(`Password Reset Link: http://localhost:5173/reset-password/${token}`);
-    console.log(`======================================================\n`);
+    const resetLink = `http://localhost:5173/reset-password/${token}`;
+
+    let transporter;
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      transporter = nodemailer.createTransport({
+        service: 'gmail', // You can configure host/port for other providers
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+    } else {
+      // Fallback for development if no credentials are provided
+      console.log("No EMAIL_USER or EMAIL_PASS provided in .env. Falling back to Ethereal Email (test account).");
+      const testAccount = await nodemailer.createTestAccount();
+      transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      });
+    }
+
+    const mailOptions = {
+      from: `"WanderLodge Support" <${process.env.EMAIL_USER || 'no-reply@wanderlodge.com'}>`,
+      to: user.email,
+      subject: "Password Reset Request",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
+          <h2 style="color: #ff385c; text-align: center;">WanderLodge Password Reset</h2>
+          <p>Hi ${user.username},</p>
+          <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+          <p>Please click on the following link, or paste this into your browser to complete the process:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" style="background-color: #ff385c; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Reset Password</a>
+          </div>
+          <p style="font-size: 14px; color: #555;">If you did not request this, please ignore this email and your password will remain unchanged.</p>
+        </div>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    
+    if (!process.env.EMAIL_USER) {
+       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    }
 
     res.json({ message: "An email has been sent to " + email + " with further instructions." });
   } catch (error) {
-    res.status(500).json({ error: "Failed to process request" });
+    console.error("Forgot password error:", error);
+    res.status(500).json({ error: "Failed to send password reset email. Please try again." });
   }
 };
 
