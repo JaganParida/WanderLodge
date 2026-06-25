@@ -14,7 +14,7 @@ const Footer = () => {
           <div>
             <h4 className="font-bold mb-4">Community</h4>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:underline">Vistiqo.org: disaster relief housing</a></li>
+              <li><a href="#" className="hover:underline">WanderLodge.org: disaster relief housing</a></li>
               <li><a href="#" className="hover:underline">Support Afghan refugees</a></li>
               <li><a href="#" className="hover:underline">Combating discrimination</a></li>
             </ul>
@@ -38,7 +38,7 @@ const Footer = () => {
         </div>
         <div className="border-t border-gray-300 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
           <div>
-            &copy; 2026 Vistiqo, Inc. &middot; <a href="#" className="hover:underline">Privacy</a> &middot; <a href="#" className="hover:underline">Terms</a>
+            &copy; 2026 WanderLodge, Inc. &middot; <a href="#" className="hover:underline">Privacy</a> &middot; <a href="#" className="hover:underline">Terms</a>
           </div>
           <div className="mt-4 md:mt-0 flex gap-4 font-semibold">
             <span>English (US)</span>

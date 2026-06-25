@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
     // Fetch a couple of top listings to give context to the AI
     const listings = await Listing.find().limit(5).select('title location price category');
     
-    const context = `You are the Vistiqo AI Concierge. Be helpful, enthusiastic, and concise. 
+    const context = `You are the WanderLodge AI Concierge. Be helpful, enthusiastic, and concise. 
     Here are some of our top properties available right now:
     ${listings.map(l => `- ${l.title} in ${l.location} for ₹${l.price}/night (${l.category})`).join('\n')}
     

@@ -64,7 +64,7 @@ const Signup = ({ defaultRole = 'user' }) => {
     <div className="flex justify-center items-center py-20 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="w-full max-w-md bg-white border border-gray-200 rounded-xl shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center mb-6">
-          {role === 'host' ? 'Become a Vistiqo Host' : 'Sign up for Vistiqo'}
+          {role === 'host' ? 'Become a WanderLodge Host' : 'Sign up for WanderLodge'}
         </h2>
         
         {error && <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4 text-sm">{error}</div>}

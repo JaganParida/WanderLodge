@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Shield, CreditCard, Smartphone, Banknote, CheckCircle, Loader2, Lock } from 'lucide-react';
 
-const RazorpayMockUI = ({ isOpen, onClose, onSuccess, amount, companyName = "Vistiqo", description = "Booking Payment" }) => {
+const RazorpayMockUI = ({ isOpen, onClose, onSuccess, amount, companyName = "WanderLodge", description = "Booking Payment" }) => {
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -184,7 +184,7 @@ const RazorpayMockUI = ({ isOpen, onClose, onSuccess, amount, companyName = "Vis
           <div className="bg-gray-50/50 px-8 py-5 flex justify-between items-center rounded-b-[28px]">
              <div className="flex items-center gap-1.5">
                <Shield size={14} className="text-gray-400" />
-               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Vistiqo Secured</span>
+               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">WanderLodge Secured</span>
              </div>
              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-600 cursor-pointer transition">English</span>
           </div>

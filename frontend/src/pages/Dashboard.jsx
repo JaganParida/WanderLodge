@@ -112,7 +112,7 @@ const InvoiceCard = ({ booking, authUser, id }) => (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '48px' }}>
       <div>
         <h1 style={{ fontSize: '32px', fontWeight: 900, color: '#FF385C', marginBottom: '8px', letterSpacing: '-0.04em' }}>INVOICE</h1>
-        <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Vistiqo Inc.</p>
+        <p style={{ color: '#6b7280', fontSize: '13px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase' }}>WanderLodge Inc.</p>
       </div>
       <div style={{ textAlign: 'right' }}>
         <p style={{ fontSize: '13px', color: '#6b7280', fontWeight: 700, marginBottom: '4px' }}>INVOICE #</p>
@@ -167,8 +167,8 @@ const InvoiceCard = ({ booking, authUser, id }) => (
       </div>
     </div>
     <div style={{ textAlign: 'center', color: '#9ca3af', fontSize: '13px', fontWeight: 500, marginTop: '40px', paddingTop: '24px', borderTop: '1px solid #f3f4f6' }}>
-      <p>Thank you for booking with Vistiqo!</p>
-      <p style={{ marginTop: '4px' }}>For support, contact support@vistiqo.com</p>
+      <p>Thank you for booking with WanderLodge!</p>
+      <p style={{ marginTop: '4px' }}>For support, contact support@wanderlodge.com</p>
     </div>
   </div>
 );
@@ -221,7 +221,7 @@ const Dashboard = () => {
       const canvas = await html2canvas(el, { scale: 3, useCORS: true, backgroundColor: null });
       const link = document.createElement('a');
       link.href = canvas.toDataURL('image/png');
-      link.download = `vistiqo-ticket-${bookingId}.png`;
+      link.download = `wanderlodge-ticket-${bookingId}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -241,7 +241,7 @@ const Dashboard = () => {
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`vistiqo-invoice-${bookingId}.pdf`);
+      pdf.save(`wanderlodge-invoice-${bookingId}.pdf`);
     } catch (err) {
       console.error("Failed to generate invoice PDF", err);
       showAlert("Download Failed", "Failed to download invoice PDF.", "error");

@@ -463,7 +463,7 @@ const ListingDetails = () => {
                   <span>{formatPrice(pricing.basePrice)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="underline">Vistiqo service fee</span>
+                  <span className="underline">WanderLodge service fee</span>
                   <span>{formatPrice(pricing.serviceFee)}</span>
                 </div>
                 <div className="flex justify-between">

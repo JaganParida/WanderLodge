@@ -6,7 +6,7 @@ const faqs = [
     category: "Booking & Payments",
     icon: <CreditCard className="w-6 h-6 text-airbnb" />,
     questions: [
-      { q: "How do I securely pay for my reservation?", a: "All payments are securely processed through our platform. We accept major credit cards, PayPal, and Apple/Google Pay. Never pay outside of Vistiqo to stay protected under our guest guarantee." },
+      { q: "How do I securely pay for my reservation?", a: "All payments are securely processed through our platform. We accept major credit cards, PayPal, and Apple/Google Pay. Never pay outside of WanderLodge to stay protected under our guest guarantee." },
       { q: "What is the cancellation policy?", a: "Cancellation policies vary by listing and host. You can find the specific cancellation policy on the listing details page before you book, and in your itinerary after booking." },
       { q: "When will I be charged?", a: "You'll be charged the full amount when your booking is confirmed by the host. For some longer stays, a payment plan may be available at checkout." }
     ]
@@ -23,8 +23,8 @@ const faqs = [
     category: "Safety & Hosting",
     icon: <Shield className="w-6 h-6 text-airbnb" />,
     questions: [
-      { q: "Is Vistiqo safe?", a: "We take safety seriously. All users must verify their identity, and our platform includes secure messaging, secure payments, and a 24/7 global support team." },
-      { q: "How do I become a host?", a: "Click on 'Vistiqo your home' at the top right of any page. We'll guide you through setting up your listing, pricing, and availability." }
+      { q: "Is WanderLodge safe?", a: "We take safety seriously. All users must verify their identity, and our platform includes secure messaging, secure payments, and a 24/7 global support team." },
+      { q: "How do I become a host?", a: "Click on 'WanderLodge your home' at the top right of any page. We'll guide you through setting up your listing, pricing, and availability." }
     ]
   }
 ];

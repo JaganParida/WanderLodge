@@ -22,7 +22,7 @@ export const translations = {
     'Online Experiences': 'Online Experiences',
     'Language and region': 'Language and region',
     'Currency': 'Currency',
-    'Vistiqo your home': 'Vistiqo your home'
+    'WanderLodge your home': 'WanderLodge your home'
   },
   'Hindi (India)': {
     'Anywhere': 'कहीं भी',
@@ -47,7 +47,7 @@ export const translations = {
     'Online Experiences': 'ऑनलाइन अनुभव',
     'Language and region': 'भाषा और क्षेत्र',
     'Currency': 'मुद्रा',
-    'Vistiqo your home': 'वंडर लॉज पर होस्ट करें'
+    'WanderLodge your home': 'वंडर लॉज पर होस्ट करें'
   },
   'Spanish (Spain)': {
     'Anywhere': 'Cualquier lugar',
@@ -72,7 +72,7 @@ export const translations = {
     'Online Experiences': 'Experiencias online',
     'Language and region': 'Idioma y región',
     'Currency': 'Moneda',
-    'Vistiqo your home': 'Pon tu espacio en Vistiqo'
+    'WanderLodge your home': 'Pon tu espacio en WanderLodge'
   }
 };
 
