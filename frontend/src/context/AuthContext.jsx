@@ -28,11 +28,13 @@ export const AuthProvider = ({ children }) => {
     };
     const targetCode = langMap[language] || 'en';
     
-    // Clear cookie if english, otherwise the banner bugs out
+    // Ensure cookie is set for persistence across reloads
     if (targetCode === 'en') {
        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
-       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
+    } else {
+       document.cookie = `googtrans=/en/${targetCode}; path=/;`;
+       document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
     }
 
     // Use a polling mechanism to find the hidden select element and dispatch change
