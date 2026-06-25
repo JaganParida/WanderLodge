@@ -28,12 +28,13 @@
       /* Hide the ugly Google Translate top bar & frame */
       .goog-te-banner-frame { display: none !important; }
       iframe.goog-te-banner-frame { display: none !important; }
+      .skiptranslate > iframe.goog-te-banner-frame { display: none !important; }
       #goog-gt-tt { display: none !important; }
       /* Hide the translation widget completely */
       #google_translate_element { display: none !important; }
       /* Prevent the body from being pushed down by the hidden banner */
-      body { top: 0px !important; position: static !important; }
-      html { top: 0px !important; position: static !important; }
+      body { top: 0px !important; position: static !important; margin-top: 0px !important; padding-top: 0px !important; }
+      html { top: 0px !important; position: static !important; margin-top: 0px !important; padding-top: 0px !important; }
       /* Hide the tooltip that appears on hover over translated text */
       .goog-tooltip { display: none !important; }
       .goog-tooltip:hover { display: none !important; }
@@ -50,5 +51,27 @@
       }
     </script>
     <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    
+    <!-- Observer to forcefully hide Google Translate UI that bypasses CSS -->
+    <script type="text/javascript">
+      const observer = new MutationObserver((mutations) => {
+        // Remove the banner iframe
+        const iframe = document.querySelector('iframe.goog-te-banner-frame');
+        if (iframe) iframe.remove();
+        
+        // Remove the tooltip
+        const tooltip = document.getElementById('goog-gt-tt');
+        if (tooltip) tooltip.remove();
+        
+        // Remove injected inline styles from body and html
+        if (document.body && document.body.style.top) {
+           document.body.style.top = '0px';
+        }
+        if (document.documentElement && document.documentElement.style.top) {
+           document.documentElement.style.top = '0px';
+        }
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+    </script>
   </body>
 </html>

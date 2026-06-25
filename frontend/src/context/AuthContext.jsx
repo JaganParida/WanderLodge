@@ -28,21 +28,27 @@ export const AuthProvider = ({ children }) => {
     };
     const targetCode = langMap[language] || 'en';
     
-    // Check current cookie
-    const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
-    const currentCode = match ? match[1] : 'en';
-
-    if (currentCode !== targetCode) {
-      // Set google translate cookie manually
-      document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
-      document.cookie = `googtrans=/en/${targetCode}; path=/;`;
-      
-      // Clear specific Google Translate storage to force refresh correctly
-      sessionStorage.clear();
-      
-      // Auto-refresh to apply language securely and fully as requested by user
-      window.location.reload();
+    // Clear cookie if english, otherwise the banner bugs out
+    if (targetCode === 'en') {
+       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
     }
+
+    // Use a polling mechanism to find the hidden select element and dispatch change
+    let attempts = 0;
+    const interval = setInterval(() => {
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        if (select.value !== targetCode) {
+           select.value = targetCode;
+           select.dispatchEvent(new Event('change'));
+        }
+        clearInterval(interval);
+      }
+      attempts++;
+      if (attempts > 50) clearInterval(interval); // Give up after 5 seconds
+    }, 100);
   };
 
   useEffect(() => {
