@@ -35,7 +35,7 @@ router.get(
 );
 
 // Get current user from httpOnly cookie (no localStorage needed)
-router.get("/me", isLoggedIn, userController.getCurrentUser);
+router.get("/me", userController.getCurrentUser);
 
 // Update user preferences
 router.put("/preferences", isLoggedIn, userController.updatePreferences);

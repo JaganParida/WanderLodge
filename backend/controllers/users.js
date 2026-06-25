@@ -70,10 +70,18 @@ module.exports.googleCallback = async (req, res) => {
   }
 };
 
-// Get current authenticated user (from cookie)
+// Get current authenticated user (from cookie) gracefully to avoid 401 console errors
 module.exports.getCurrentUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const token = req.cookies?.jwt;
+    if (!token) return res.json({ user: null });
+
+    const jwt = require("jsonwebtoken");
+    const decoded = jwt.verify(token, process.env.SECRET);
+    
+    const user = await User.findById(decoded._id);
+    if (!user) return res.json({ user: null });
+
     res.json({ 
       user: { 
         _id: user._id, 
@@ -86,7 +94,8 @@ module.exports.getCurrentUser = async (req, res) => {
       } 
     });
   } catch (error) {
-    res.status(500).json({ error: "Failed to get user" });
+    // If token is invalid or expired, return null gracefully instead of throwing 500/401
+    res.json({ user: null });
   }
 };
 
