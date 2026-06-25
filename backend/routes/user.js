@@ -52,4 +52,7 @@ router.post("/forgot-password", wrapAsync(userController.forgotPassword));
 // Reset Password
 router.post("/reset-password/:token", wrapAsync(userController.resetPassword));
 
+// Test Email Setup API
+router.get("/test-email", wrapAsync(userController.testEmail));
+
 module.exports = router;
