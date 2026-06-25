@@ -40,7 +40,7 @@ const seedData = [
         "rating": 4.6951407185279646,
         "images": [
             {
-                "url": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1000&auto=format&fit=crop",
+                "url": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1000",
                 "filename": "listingimage"
             },
             {
@@ -862,7 +862,7 @@ const seedData = [
         "rating": 4.900151122976726,
         "images": [
             {
-                "url": "https://images.unsplash.com/photo-1505843513577-22bb7abd1182?q=80&w=1000&auto=format&fit=crop",
+                "url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000",
                 "filename": "listingimage"
             },
             {
