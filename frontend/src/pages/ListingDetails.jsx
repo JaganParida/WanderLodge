@@ -186,11 +186,9 @@ const ListingDetails = () => {
     );
   }
 
-  const averageRating = listing.rating && listing.rating > 0 
-    ? listing.rating.toFixed(2)
-    : (listing.reviews?.length > 0 
-        ? (listing.reviews.reduce((acc, curr) => acc + curr.rating, 0) / listing.reviews.length).toFixed(2)
-        : 'New');
+  const averageRating = listing.reviews?.length > 0 
+    ? (listing.reviews.reduce((acc, curr) => acc + (curr.rating || 0), 0) / listing.reviews.length).toFixed(2)
+    : 'New';
 
   // Format images for grid (ensure we have 5 spots)
   const images = listing.images || [];
@@ -198,8 +196,8 @@ const ListingDetails = () => {
     images[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200',
     images[1]?.url || 'https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=600',
     images[2]?.url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600',
-    images[3]?.url || 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=600',
-    images[4]?.url || 'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=600'
+    images[3]?.url || 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=600',
+    images[4]?.url || 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?q=80&w=600'
   ];
 
   const expandedTourImages = [
@@ -223,14 +221,15 @@ const ListingDetails = () => {
       {/* Header */}
       <h1 className="text-[26px] font-semibold text-gray-900 mb-1">{listing.title}</h1>
       <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center text-[15px] font-medium text-gray-900 underline gap-2">
-           {(listing.rating > 0 || listing.reviews?.length > 0) && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> {averageRating}</span>}
-           {listing.reviews?.length > 0 && <span className="no-underline text-gray-400">·</span>}
-           {listing.reviews?.length > 0 && <span>{listing.reviews.length} reviews</span>}
-           {!(listing.rating > 0 || listing.reviews?.length > 0) && <span className="flex items-center gap-1"><Star size={14} fill="currentColor" /> New</span>}
-           <span className="flex items-center gap-1"><MapPin size={14} className="no-underline" /> {listing.location}, {listing.country}</span>
+        <div className="flex items-center text-[15px] font-medium text-gray-900 gap-2">
+           {listing.reviews?.length > 0 && <span className="flex items-center gap-1 font-semibold"><Star size={14} fill="currentColor" /> {averageRating}</span>}
+           {listing.reviews?.length > 0 && <span className="text-gray-400">·</span>}
+           {listing.reviews?.length > 0 && <span className="underline cursor-pointer hover:text-black">{listing.reviews.length} reviews</span>}
+           {(!listing.reviews || listing.reviews.length === 0) && <span className="flex items-center gap-1 font-semibold text-gray-600"><Star size={14} fill="currentColor" /> New</span>}
+           <span className="text-gray-400">·</span>
+           <span className="flex items-center gap-1 underline cursor-pointer hover:text-black"><MapPin size={14} className="no-underline" /> {listing.location}, {listing.country}</span>
         </div>
-        <div className="flex gap-4 text-sm font-semibold underline relative">
+        <div className="flex gap-4 text-sm font-semibold relative">
           <button onClick={handleShare} className="flex items-center gap-2 hover:bg-gray-100 px-3 py-2 rounded-lg transition">
              <Share size={16} /> Share
           </button>
