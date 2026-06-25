@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { X, ChevronLeft } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { X, ChevronLeft, ChevronRight, Share, Heart } from 'lucide-react';
+import SafeImage from './SafeImage';
 
 const PhotoTourModal = ({ isOpen, onClose, images, title }) => {
   if (!isOpen) return null;
@@ -25,11 +26,11 @@ const PhotoTourModal = ({ isOpen, onClose, images, title }) => {
           {images && images.length > 0 ? (
             images.map((img, index) => (
               <div key={index} className="w-full">
-                <img 
+                <SafeImage 
                   src={img.url || img} 
-                  alt={`${title || 'Listing'} - Photo ${index + 1}`} 
-                  className="w-full h-auto object-cover rounded-xl"
-                  loading="lazy"
+                  alt={`${title || 'Listing'} - Photo ${index + 1}`}
+                  fallbackIconSize={64}
+                  className="w-full h-auto max-h-[70vh] object-contain mx-auto"
                 />
               </div>
             ))

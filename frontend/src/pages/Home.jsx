@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Heart, Star, Tent, Castle, Waves, Flame, Building, Trees, Home as HomeIcon, SlidersHorizontal, X, Search } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
+import SafeImage from '../components/SafeImage';
 
 const CATEGORIES = [
   { label: 'Trending', icon: Flame },
@@ -256,10 +257,11 @@ const Home = () => {
         {listings.map(listing => (
           <Link to={`/listings/${listing._id}`} key={listing._id} className="group cursor-pointer text-gray-900 block relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl mb-3">
-              <img 
-                src={listing.images?.[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=600'} 
+              <SafeImage 
+                src={listing.images?.[0]?.url || listing.image?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=600'} 
                 alt={listing.title} 
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                fallbackIconSize={48}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
               />
             </div>
             <button 

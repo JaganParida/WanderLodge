@@ -4,6 +4,7 @@ import axios from 'axios';
 import { PlusCircle, List, Settings, TrendingUp, CalendarCheck, CheckCircle, XCircle, Camera, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Avatar from '../components/Avatar';
+import SafeImage from '../components/SafeImage';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const HostDashboard = () => {
@@ -375,7 +376,7 @@ const HostDashboard = () => {
                    {data.myListings.map(listing => (
                      <div key={listing._id} className="border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition bg-white flex flex-col h-full">
                          <div className="h-56 bg-gray-100 relative group overflow-hidden">
-                            <img src={listing.images?.[0]?.url} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                            <SafeImage src={listing.images?.[0]?.url} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" fallbackIconSize={48} />
                             <div className="absolute top-3 left-3">
                                <span className="bg-white/90 backdrop-blur text-gray-900 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">Live</span>
                             </div>

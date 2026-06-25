@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { User, Heart, Calendar, Settings, Download, Camera, X, FileText, Image as ImageIcon, Eye, XCircle, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Avatar from '../components/Avatar';
+import SafeImage from '../components/SafeImage';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -395,7 +396,9 @@ const Dashboard = () => {
                     {/* Body */}
                     <div className="p-4 sm:p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
                       <div className="flex gap-4 sm:gap-6 items-center w-full md:w-auto">
-                        <img src={booking.listing?.images?.[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=200'} alt="Listing" className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg shadow-sm shrink-0" />
+                        <div className="shrink-0">
+                          <SafeImage src={booking.listing?.images?.[0]?.url || 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=200'} alt="Listing" className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg shadow-sm" fallbackIconSize={32} />
+                        </div>
                         <div>
                           <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1">{booking.listing?.title || 'Listing Unavailable'}</h3>
                           <p className="text-gray-500 text-xs sm:text-sm mb-2">{booking.listing?.location}</p>
@@ -443,7 +446,7 @@ const Dashboard = () => {
                 <Link to={`/listings/${listing._id}`} key={listing._id} className="group cursor-pointer block">
                   <div className="overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100">
                     <div className="overflow-hidden h-48">
-                      <img src={listing.images?.[0]?.url || listing.image?.url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=400'} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <SafeImage src={listing.images?.[0]?.url || listing.image?.url || 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=400'} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" fallbackIconSize={48} />
                     </div>
                     <div className="p-4">
                       <h3 className="font-bold text-gray-900 truncate">{listing.title}</h3>
