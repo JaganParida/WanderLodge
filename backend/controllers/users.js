@@ -193,11 +193,14 @@ module.exports.forgotPassword = async (req, res) => {
       `,
     };
 
-    const info = await transporter.sendMail(mailOptions);
-    
-    if (!process.env.EMAIL_USER) {
-       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    }
+    // Send email asynchronously (fire and forget) to make the API respond instantly
+    transporter.sendMail(mailOptions).then(info => {
+      if (!process.env.EMAIL_USER) {
+         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      }
+    }).catch(err => {
+      console.error("Async email sending failed:", err);
+    });
 
     res.json({ message: "An email has been sent to " + email + " with further instructions." });
   } catch (error) {
