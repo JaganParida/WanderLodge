@@ -34,7 +34,7 @@ module.exports.signup = async (req, res, next) => {
     res.cookie("jwt", token, cookieOptions);
 
     res.status(201).json({ 
-        message: "Welcome to WanderLodge!", 
+        message: "Welcome to Vistiqo!", 
         user: { _id: registeredUser._id, username, email, role: registeredUser.role }
     });
   } catch (error) {
@@ -51,7 +51,7 @@ module.exports.login = async (req, res) => {
     res.cookie("jwt", token, cookieOptions);
 
     res.json({ 
-        message: "Welcome back to WanderLodge!", 
+        message: "Welcome back to Vistiqo!", 
         user: { _id: req.user._id, username: req.user.username, email: req.user.email, role: req.user.role }
     });
   } catch (error) {
@@ -162,7 +162,7 @@ module.exports.forgotPassword = async (req, res) => {
 
     const mailHtml = `
       <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
-        <h2 style="color: #ff385c; text-align: center;">WanderLodge Password Reset</h2>
+        <h2 style="color: #ff385c; text-align: center;">Vistiqo Password Reset</h2>
         <p>Hi ${user.username},</p>
         <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
         <p>Please click on the following link, or paste this into your browser to complete the process:</p>

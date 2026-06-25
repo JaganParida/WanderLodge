@@ -1,6 +1,6 @@
-# WanderLodge
+# Vistiqo
 
-Welcome to **WanderLodge**, a premium, full-stack vacation rental platform that connects travelers with extraordinary properties worldwide. Designed with top-tier UI/UX, seamless booking flows, and powerful host analytics, this platform delivers an end-to-end luxury hospitality experience.
+Welcome to **Vistiqo**, a premium, full-stack vacation rental platform that connects travelers with extraordinary properties worldwide. Designed with top-tier UI/UX, seamless booking flows, and powerful host analytics, this platform delivers an end-to-end luxury hospitality experience.
 
 ## 🛑 Copyright & Usage Notice
 **STRICTLY CONFIDENTIAL AND PROPRIETARY**
@@ -13,7 +13,7 @@ Forking, cloning, copying, or distributing this repository in any form is **stri
 ### 🤵 For Users (Travelers)
 * **Discover Unique Stays**: Browse properties globally with interactive mapping (Leaflet/OpenStreetMap).
 * **Smart Category Filters**: Explore niche categories like Beachfront, Castles, Tiny Homes, and Trending.
-* **WanderLodge AI Concierge**: Built-in intelligent chatbot assistant to help guests find properties, answer questions, and provide immediate support anywhere on the platform.
+* **Vistiqo AI Concierge**: Built-in intelligent chatbot assistant to help guests find properties, answer questions, and provide immediate support anywhere on the platform.
 * **Dynamic Pricing Engine**: Accurate, real-time pricing calculated dynamically per-guest, per-night, inclusive of taxes and service fees.
 * **Instant Booking System**: Select available dates, specify guests (respecting property capacity), and lock in reservations.
 * **Digital Tickets & Invoices**: Access aesthetic, print-ready digital boarding passes (PNG) and professional invoices (PDF) directly from the user dashboard.
@@ -53,4 +53,4 @@ Forking, cloning, copying, or distributing this repository in any form is **stri
 * **State Management**: Complex, asynchronous React state handling using `useMemo`, `useEffect`, and Context API for peak performance.
 
 ---
-*© WanderLodge Inc. All Rights Reserved.*
+*© Vistiqo Inc. All Rights Reserved.*

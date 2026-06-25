@@ -5,7 +5,7 @@ import { MessageSquare, X, Send } from 'lucide-react';
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { text: "Hi! I'm the WanderLodge AI Concierge. Need help finding a property?", sender: 'ai' }
+    { text: "Hi! I'm the Vistiqo AI Concierge. Need help finding a property?", sender: 'ai' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,7 @@ const Chatbot = () => {
                <div className="w-8 h-8 rounded-full bg-airbnb flex items-center justify-center">
                  <MessageSquare size={16} />
                </div>
-               <span className="font-bold">WanderLodge AI</span>
+               <span className="font-bold">Vistiqo AI</span>
              </div>
              <button onClick={() => setIsOpen(false)} className="hover:bg-gray-800 p-2 rounded-full transition"><X size={18} /></button>
           </div>

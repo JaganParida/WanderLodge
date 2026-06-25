@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const [globalLanguage, setGlobalLanguage] = useState(localStorage.getItem('wanderLodgeLang') || 'English (US)');
-  const [globalCurrency, setGlobalCurrency] = useState(localStorage.getItem('wanderLodgeCurr') || 'INR - ₹');
+  const [globalLanguage, setGlobalLanguage] = useState(localStorage.getItem('vistiqoLang') || 'English (US)');
+  const [globalCurrency, setGlobalCurrency] = useState(localStorage.getItem('vistiqoCurr') || 'INR - ₹');
 
   // On app mount, check if we have a valid session via httpOnly cookie
   useEffect(() => {
@@ -21,8 +21,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('wanderLodgeLang', globalLanguage);
-    localStorage.setItem('wanderLodgeCurr', globalCurrency);
+    localStorage.setItem('vistiqoLang', globalLanguage);
+    localStorage.setItem('vistiqoCurr', globalCurrency);
   }, [globalLanguage, globalCurrency]);
 
   const checkAuth = async () => {

@@ -66,11 +66,12 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-1 text-airbnb">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-airbnb">
-              <path d="M8 3l4 8 5-5 5 15H2L8 3z" />
+          <Link to="/" className="flex items-center gap-2 text-airbnb hover:opacity-90 transition-opacity">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-airbnb">
+              <path d="M4 5L10.8 19.5C11.3 20.5 12.7 20.5 13.2 19.5L20 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M9 5L12 11L15 5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="opacity-40" />
             </svg>
-            <span className="text-xl font-bold tracking-tight hidden md:block">WanderLodge</span>
+            <span className="text-2xl font-extrabold tracking-tighter hidden md:block" style={{ fontFamily: 'Inter, sans-serif', letterSpacing: '-0.04em' }}>Vistiqo</span>
           </Link>
 
           {/* Search Bar (Mid) */}

@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Listing = require('../models/listing');
 const User = require('../models/user');
 
-const MONGODB_URL = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/wanderlodge';
+const MONGODB_URL = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/vistiqo';
 
 main()
   .then(() => {

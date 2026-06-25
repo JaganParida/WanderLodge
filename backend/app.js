@@ -25,7 +25,7 @@ const hostRouter = require("./routes/host.js");
 const chatbotRouter = require("./routes/chatbot.js");
 
 // Database connection
-const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/WanderLodge";
+const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/Vistiqo";
 
 main()
   .then(() => {
@@ -120,7 +120,7 @@ app.use("/api/chatbot", chatbotRouter);
 
 // Base Route
 app.get("/api", (req, res) => {
-    res.json({ message: "Welcome to WanderLodge API" });
+    res.json({ message: "Welcome to Vistiqo API" });
 });
 
 // 404 Error Handler

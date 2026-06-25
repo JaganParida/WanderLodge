@@ -35,7 +35,7 @@ export default async function handler(req, res) {
     }
 
     const mailOptions = {
-      from: `"WanderLodge Support" <${process.env.EMAIL_USER}>`,
+      from: `"Vistiqo Support" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
