@@ -5,11 +5,12 @@ import { useAuth } from '../context/AuthContext';
 import Avatar from './Avatar';
 
 const Navbar = () => {
+  const { user, isLoggedIn, isHost, logout, updateUserPreferences, t, globalLanguage, globalCurrency, setGlobalLanguage, setGlobalCurrency } = useAuth();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isGlobeModalOpen, setIsGlobeModalOpen] = useState(false);
   const [globeTab, setGlobeTab] = useState('language'); // 'language' or 'currency'
-  const { user, isLoggedIn, isHost, logout, updateUserPreferences, t, globalLanguage, globalCurrency } = useAuth();
 
   // Initialize modal state from global context
   const [selectedLanguage, setSelectedLanguage] = useState(globalLanguage || 'English (US)');
@@ -31,12 +32,14 @@ const Navbar = () => {
 
   const handleLanguageSelect = (lang) => {
     setSelectedLanguage(lang);
+    setGlobalLanguage(lang);
     if (isLoggedIn) updateUserPreferences(lang, selectedCurrency);
     setIsGlobeModalOpen(false);
   };
 
   const handleCurrencySelect = (currString) => {
     setSelectedCurrency(currString);
+    setGlobalCurrency(currString);
     if (isLoggedIn) updateUserPreferences(selectedLanguage, currString);
     setIsGlobeModalOpen(false);
   };
