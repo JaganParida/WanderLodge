@@ -52,7 +52,7 @@ const seedData = [
                 "filename": "listingimage"
             },
             {
-                "url": "https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=1000&auto=format&fit=crop",
+                "url": "https://images.unsplash.com/photo-1510798831971-661eb04b3739?q=80&w=1000&auto=format&fit=crop",
                 "filename": "listingimage"
             }
         ],
@@ -397,7 +397,7 @@ const seedData = [
                 "filename": "listingimage"
             },
             {
-                "url": "https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=1000",
+                "url": "https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=1000",
                 "filename": "listingimage"
             }
         ],
@@ -484,7 +484,7 @@ const seedData = [
                 "filename": "listingimage"
             },
             {
-                "url": "https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=1000",
+                "url": "https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=1000",
                 "filename": "listingimage"
             }
         ],
@@ -690,7 +690,7 @@ const seedData = [
         "rating": 4.915368441214229,
         "images": [
             {
-                "url": "https://images.unsplash.com/photo-1504280741562-6022864950a8?q=80&w=1000&auto=format&fit=crop",
+                "url": "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1000",
                 "filename": "listingimage"
             },
             {
@@ -874,7 +874,7 @@ const seedData = [
                 "filename": "listingimage"
             },
             {
-                "url": "https://images.unsplash.com/photo-1502672260266-1c1e5250ce07?q=80&w=1000",
+                "url": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000",
                 "filename": "listingimage"
             }
         ],
