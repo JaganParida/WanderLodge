@@ -151,57 +151,34 @@ module.exports.forgotPassword = async (req, res) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const resetLink = `${frontendUrl}/reset-password/${token}`;
 
-    let transporter;
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
-      });
-    } else {
-      // Fallback for development if no credentials are provided
-      console.log("No EMAIL_USER or EMAIL_PASS provided in .env. Falling back to Ethereal Email (test account).");
-      const testAccount = await nodemailer.createTestAccount();
-      transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false,
-        auth: {
-          user: testAccount.user,
-          pass: testAccount.pass,
-        },
-      });
-    }
+    const mailHtml = `
+      <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
+        <h2 style="color: #ff385c; text-align: center;">WanderLodge Password Reset</h2>
+        <p>Hi ${user.username},</p>
+        <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+        <p>Please click on the following link, or paste this into your browser to complete the process:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetLink}" style="background-color: #ff385c; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Reset Password</a>
+        </div>
+        <p style="font-size: 14px; color: #555;">If you did not request this, please ignore this email and your password will remain unchanged.</p>
+      </div>
+    `;
 
-    const mailOptions = {
-      from: `"WanderLodge Support" <${process.env.EMAIL_USER || 'no-reply@wanderlodge.com'}>`,
+    // Make an HTTP POST to the Vercel Serverless API to send the email
+    // This safely bypasses Render's SMTP port 465 firewall!
+    const axios = require('axios');
+    axios.post(`${frontendUrl}/api/send-email`, {
       to: user.email,
       subject: "Password Reset Request",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-w: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px;">
-          <h2 style="color: #ff385c; text-align: center;">WanderLodge Password Reset</h2>
-          <p>Hi ${user.username},</p>
-          <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
-          <p>Please click on the following link, or paste this into your browser to complete the process:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${resetLink}" style="background-color: #ff385c; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold;">Reset Password</a>
-          </div>
-          <p style="font-size: 14px; color: #555;">If you did not request this, please ignore this email and your password will remain unchanged.</p>
-        </div>
-      `,
-    };
-
-    // Send email asynchronously (fire and forget) to make the API respond instantly
-    transporter.sendMail(mailOptions).then(info => {
-      if (!process.env.EMAIL_USER) {
-         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      html: mailHtml
+    }, {
+      headers: {
+        'x-server-api-key': process.env.SERVER_API_KEY || ''
       }
+    }).then(res => {
+      console.log('Vercel API successfully dispatched email');
     }).catch(err => {
-      console.error("Async email sending failed:", err);
+      console.error('Failed to trigger Vercel API:', err.response?.data || err.message);
     });
 
     res.json({ message: "An email has been sent to " + email + " with further instructions." });
