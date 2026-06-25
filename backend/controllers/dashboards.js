@@ -6,12 +6,6 @@ const Booking = require("../models/booking");
 module.exports.renderProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id).populate({
-            path: 'bookings',
-            populate: {
-                path: 'listing',
-                populate: { path: 'reviews', select: 'rating' }
-            }
-        }).populate({
             path: 'wishlist',
             populate: { path: 'reviews', select: 'rating' }
         });
