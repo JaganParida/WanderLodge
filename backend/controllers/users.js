@@ -166,19 +166,24 @@ module.exports.forgotPassword = async (req, res) => {
 
     // Make an HTTP POST to the Vercel Serverless API to send the email
     // This safely bypasses Render's SMTP port 465 firewall!
-    const axios = require('axios');
-    axios.post(`${frontendUrl}/api/send-email`, {
-      to: user.email,
-      subject: "Password Reset Request",
-      html: mailHtml
-    }, {
+    fetch(`${frontendUrl}/api/send-email`, {
+      method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'x-server-api-key': process.env.SERVER_API_KEY || ''
-      }
-    }).then(res => {
-      console.log('Vercel API successfully dispatched email');
-    }).catch(err => {
-      console.error('Failed to trigger Vercel API:', err.response?.data || err.message);
+      },
+      body: JSON.stringify({
+        to: user.email,
+        subject: "Password Reset Request",
+        html: mailHtml
+      })
+    })
+    .then(res => {
+      if (!res.ok) console.error('Vercel API returned non-OK status:', res.status);
+      else console.log('Vercel API successfully dispatched email');
+    })
+    .catch(err => {
+      console.error('Failed to trigger Vercel API:', err.message);
     });
 
     res.json({ message: "An email has been sent to " + email + " with further instructions." });
