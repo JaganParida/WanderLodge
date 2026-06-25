@@ -26,18 +26,22 @@ export const AuthProvider = ({ children }) => {
       'Hindi (India)': 'hi',
       'Spanish (Spain)': 'es'
     };
-    const code = langMap[language] || 'en';
+    const targetCode = langMap[language] || 'en';
     
-    // Find the hidden google translate select and trigger change
-    const select = document.querySelector('select.goog-te-combo');
-    if (select) {
-      select.value = code;
-      select.dispatchEvent(new Event('change'));
-    } else {
-      // Set google translate cookie manually if script hasn't loaded fully
-      document.cookie = `googtrans=/en/${code}; path=/; domain=${window.location.hostname}`;
-      document.cookie = `googtrans=/en/${code}; path=/;`;
-      // We don't force reload to avoid loops, the script in index.html will pick up the cookie when it loads
+    // Check current cookie
+    const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+    const currentCode = match ? match[1] : 'en';
+
+    if (currentCode !== targetCode) {
+      // Set google translate cookie manually
+      document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=/en/${targetCode}; path=/;`;
+      
+      // Clear specific Google Translate storage to force refresh correctly
+      sessionStorage.clear();
+      
+      // Auto-refresh to apply language securely and fully as requested by user
+      window.location.reload();
     }
   };
 

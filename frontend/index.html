@@ -25,12 +25,15 @@
     
     <!-- Hidden Google Translate Integration -->
     <style>
-      /* Hide the ugly Google Translate top bar */
-      .goog-te-banner-frame.skiptranslate { display: none !important; }
+      /* Hide the ugly Google Translate top bar & frame */
+      .goog-te-banner-frame { display: none !important; }
+      iframe.goog-te-banner-frame { display: none !important; }
+      #goog-gt-tt { display: none !important; }
       /* Hide the translation widget completely */
       #google_translate_element { display: none !important; }
       /* Prevent the body from being pushed down by the hidden banner */
-      body { top: 0px !important; }
+      body { top: 0px !important; position: static !important; }
+      html { top: 0px !important; position: static !important; }
       /* Hide the tooltip that appears on hover over translated text */
       .goog-tooltip { display: none !important; }
       .goog-tooltip:hover { display: none !important; }
