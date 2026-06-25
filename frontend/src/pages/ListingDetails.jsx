@@ -379,8 +379,8 @@ const ListingDetails = () => {
             <h2 className="text-[22px] font-semibold mb-6">Where you'll be</h2>
             <div className="h-[480px] w-full rounded-xl overflow-hidden z-0 relative mb-4">
               {mapCenter && (
-                <MapContainer center={mapCenter} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
-                  <TileLayer attribution='&copy; Google Maps' url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" />
+                <MapContainer center={mapCenter} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }} attributionControl={false}>
+                  <TileLayer url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" />
                   <Marker position={mapCenter} icon={customMarker}>
                     <Popup className="rounded-xl border-0 shadow-lg"><div className="text-center font-semibold text-gray-900 px-2 py-1 text-sm">Exact location provided after booking.</div></Popup>
                   </Marker>

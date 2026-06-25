@@ -7,6 +7,33 @@ import Avatar from '../components/Avatar';
 import SafeImage from '../components/SafeImage';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix leaflet icon
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
+
+let DefaultIcon = L.icon({
+    iconRetinaUrl: iconRetina,
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+const customMarker = L.divIcon({
+  className: 'custom-marker',
+  html: `<div style="background-color: #ff385c; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255,56,92,0.4); border: 3px solid white; transform: translate(-10px, -20px);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>`,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40]
+});
 
 // Generate stable barcode data per booking id
 const generateBarcodeData = (seed) => {
@@ -172,6 +199,41 @@ const InvoiceCard = ({ booking, authUser, id }) => (
     </div>
   </div>
 );
+
+const BookingMap = ({ booking }) => {
+  const [mapCenter, setMapCenter] = useState(null);
+  const { listing } = booking;
+
+  useEffect(() => {
+    if (!listing) return;
+    
+    if (listing.geometry?.coordinates && (listing.geometry.coordinates[0] !== 0 || listing.geometry.coordinates[1] !== 0)) {
+       setMapCenter([listing.geometry.coordinates[1], listing.geometry.coordinates[0]]);
+    } else {
+       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(listing.location + (listing.country ? ', ' + listing.country : ''))}`)
+         .then(r => r.json())
+         .then(geo => {
+            if(geo && geo.length > 0) setMapCenter([parseFloat(geo[0].lat), parseFloat(geo[0].lon)]);
+            else setMapCenter([20.5937, 78.9629]); 
+         }).catch(() => setMapCenter([20.5937, 78.9629]));
+    }
+  }, [listing]);
+
+  if (!mapCenter) return <div className="h-48 bg-gray-100 rounded-lg animate-pulse w-full mt-4"></div>;
+
+  return (
+    <div className="h-48 w-full rounded-lg overflow-hidden relative z-0 mt-4 border border-gray-200 shadow-inner">
+      <MapContainer center={mapCenter} zoom={14} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }} attributionControl={false}>
+        <TileLayer url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" />
+        <Marker position={mapCenter} icon={customMarker}>
+          <Popup className="rounded-xl border-0 shadow-lg">
+            <div className="text-center font-bold text-gray-900 px-2 py-1 text-sm">Your exact stay location!</div>
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </div>
+  );
+};
 
 const Dashboard = () => {
   const { user: authUser, loading: authLoading } = useAuth();
@@ -422,6 +484,13 @@ const Dashboard = () => {
                         )}
                       </div>
                     </div>
+                    
+                    {/* Booking Map */}
+                    {booking.status === 'Confirmed' && booking.listing && (
+                      <div className="px-4 pb-4 sm:px-6 sm:pb-6">
+                        <BookingMap booking={booking} />
+                      </div>
+                    )}
 
                     {/* Hidden Render Targets for html2canvas */}
                     <div className="absolute -left-[9999px] top-0 pointer-events-none opacity-0">
