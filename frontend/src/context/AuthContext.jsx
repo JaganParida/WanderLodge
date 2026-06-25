@@ -37,24 +37,30 @@ export const AuthProvider = ({ children }) => {
     };
     const targetCode = langMap[language] || 'en';
     
-    // Check current translation state
-    const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
-    const currentCode = match ? match[1] : 'en';
-
-    if (currentCode !== targetCode) {
-      // First, systematically CLEAR all possible variations of the old cookie
-      document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
-
-      // Then, set the new cookie (only if not English, since English is default)
-      if (targetCode !== 'en') {
-         document.cookie = `googtrans=/en/${targetCode}; path=/;`;
-      }
-      
-      // Auto-refresh to ensure pristine translation application without glitching
-      window.location.reload();
+    // Explicitly set the cookie so Google Translate remembers on its own.
+    // We do NOT reload the page to prevent infinite loops in browsers that block cookies.
+    if (targetCode === 'en') {
+       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
+    } else {
+       document.cookie = `googtrans=/en/${targetCode}; path=/;`;
     }
+
+    // Dynamically trigger the translation widget without reloading
+    let attempts = 0;
+    const interval = setInterval(() => {
+      const select = document.querySelector('.goog-te-combo');
+      if (select) {
+        if (select.value !== targetCode) {
+           select.value = targetCode;
+           select.dispatchEvent(new Event('change'));
+        }
+        clearInterval(interval);
+      }
+      attempts++;
+      if (attempts > 50) clearInterval(interval); // Give up after 5 seconds
+    }, 100);
   };
 
   useEffect(() => {
