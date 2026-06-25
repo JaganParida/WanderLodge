@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginModal from '../components/LoginModal';
 import PhotoTourModal from '../components/PhotoTourModal';
 import RazorpayMockUI from '../components/RazorpayMockUI';
+import SafeImage from '../components/SafeImage';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -245,7 +246,7 @@ const ListingDetails = () => {
         <div className="flex overflow-x-auto snap-x snap-mandatory h-full scrollbar-hide">
           {displayImages.map((imgUrl, idx) => (
             <div key={idx} className="w-full h-full flex-shrink-0 snap-center relative">
-              <img 
+              <SafeImage 
                  src={imgUrl} 
                  alt={`Photo ${idx + 1}`} 
                  className="w-full h-full object-cover" 
@@ -272,21 +273,21 @@ const ListingDetails = () => {
       </div>
 
       {/* Airbnb-style Photo Grid (Desktop) */}
-      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[50vh] min-h-[400px] max-h-[500px] mb-8 relative rounded-2xl overflow-hidden">
+      <div className="hidden md:grid grid-cols-4 grid-rows-2 gap-2 h-[50vh] min-h-[400px] max-h-[500px] mb-8 relative rounded-2xl overflow-hidden bg-gray-100">
         <div className="col-span-2 row-span-2 h-full cursor-pointer overflow-hidden group">
-          <img src={displayImages[0]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+          <SafeImage src={displayImages[0]} fallbackIconSize={48} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
         <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
-          <img src={displayImages[1]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+          <SafeImage src={displayImages[1]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
         <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
-          <img src={displayImages[2]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+          <SafeImage src={displayImages[2]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
         <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
-          <img src={displayImages[3]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+          <SafeImage src={displayImages[3]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
         <div className="col-span-1 row-span-1 h-full cursor-pointer overflow-hidden group">
-          <img src={displayImages[4]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
+          <SafeImage src={displayImages[4]} className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500 hover:brightness-90" />
         </div>
         <button onClick={() => setShowPhotoTour(true)} className="absolute bottom-6 right-6 bg-white px-4 py-1.5 rounded-lg font-semibold text-[15px] border border-black flex items-center gap-2 hover:bg-gray-100 shadow-md">
            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation" focusable="false" style={{ display: 'block', height: '16px', width: '16px', fill: 'currentcolor' }}><path d="m8.5 7.4-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9zm6.2-.2-4-4.1c-.2-.3-.6-.3-.8 0l-1.3 1.3c-.3.3-.3.7 0 .9l3.5 3.5c.2.2.2.5 0 .7l-3.5 3.5c-.2.2-.2.6 0 .8l1.3 1.3c.2.2.6.2.8 0l4-4c.3-.3.3-.7 0-.9z"></path></svg>
