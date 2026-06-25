@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import HostDashboard from './pages/HostDashboard';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import NotFound from './pages/NotFound';
+import HelpCenter from './pages/HelpCenter';
 import Chatbot from './components/Chatbot';
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
               <Route path="/listings/:id" element={<ListingDetails />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/host-dashboard" element={<HostDashboard />} />
+              <Route path="/help" element={<HelpCenter />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
