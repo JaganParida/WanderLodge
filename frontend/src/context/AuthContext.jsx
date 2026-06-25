@@ -20,9 +20,33 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
+  const triggerGoogleTranslate = (language) => {
+    const langMap = {
+      'English (US)': 'en',
+      'Hindi (India)': 'hi',
+      'Spanish (Spain)': 'es'
+    };
+    const code = langMap[language] || 'en';
+    
+    // Find the hidden google translate select and trigger change
+    const select = document.querySelector('select.goog-te-combo');
+    if (select) {
+      select.value = code;
+      select.dispatchEvent(new Event('change'));
+    } else {
+      // Set google translate cookie manually if script hasn't loaded fully
+      document.cookie = `googtrans=/en/${code}; path=/; domain=${window.location.hostname}`;
+      document.cookie = `googtrans=/en/${code}; path=/;`;
+      // We don't force reload to avoid loops, the script in index.html will pick up the cookie when it loads
+    }
+  };
+
   useEffect(() => {
     localStorage.setItem('wanderLodgeLang', globalLanguage);
     localStorage.setItem('wanderLodgeCurr', globalCurrency);
+    
+    // Trigger full page translation
+    triggerGoogleTranslate(globalLanguage);
   }, [globalLanguage, globalCurrency]);
 
   const checkAuth = async () => {
