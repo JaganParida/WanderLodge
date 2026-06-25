@@ -33,6 +33,7 @@ const ListingDetails = () => {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [mapCenter, setMapCenter] = useState(null);
   
   const [isSaved, setIsSaved] = useState(false);
   const [showShareTooltip, setShowShareTooltip] = useState(false);
@@ -96,7 +97,21 @@ const ListingDetails = () => {
   useEffect(() => {
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        setListing(res.data);
+        const data = res.data;
+        setListing(data);
+        
+        // Dynamic Geocoding Fallback for [0,0] coordinates
+        if (data.geometry?.coordinates && (data.geometry.coordinates[0] !== 0 || data.geometry.coordinates[1] !== 0)) {
+           setMapCenter([data.geometry.coordinates[1], data.geometry.coordinates[0]]);
+        } else {
+           fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(data.location + ', ' + data.country)}`)
+             .then(r => r.json())
+             .then(geo => {
+                if(geo && geo.length > 0) setMapCenter([parseFloat(geo[0].lat), parseFloat(geo[0].lon)]);
+                else setMapCenter([20.5937, 78.9629]); // fallback India
+             }).catch(() => setMapCenter([20.5937, 78.9629]));
+        }
+        
         setLoading(false);
       })
       .catch(err => {
@@ -363,14 +378,14 @@ const ListingDetails = () => {
           <div className="py-8 border-b border-gray-200">
             <h2 className="text-[22px] font-semibold mb-6">Where you'll be</h2>
             <div className="h-[480px] w-full rounded-xl overflow-hidden z-0 relative mb-4">
-              <MapContainer center={listing.geometry?.coordinates ? [listing.geometry.coordinates[1], listing.geometry.coordinates[0]] : [20.5937, 78.9629]} zoom={listing.geometry?.coordinates ? 13 : 4} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
-                <TileLayer attribution='&copy; Google Maps' url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" />
-                {listing.geometry?.coordinates && (
-                  <Marker position={[listing.geometry.coordinates[1], listing.geometry.coordinates[0]]} icon={customMarker}>
+              {mapCenter && (
+                <MapContainer center={mapCenter} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%' }}>
+                  <TileLayer attribution='&copy; Google Maps' url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" />
+                  <Marker position={mapCenter} icon={customMarker}>
                     <Popup className="rounded-xl border-0 shadow-lg"><div className="text-center font-semibold text-gray-900 px-2 py-1 text-sm">Exact location provided after booking.</div></Popup>
                   </Marker>
-                )}
-              </MapContainer>
+                </MapContainer>
+              )}
             </div>
             <p className="font-semibold text-[16px]">{listing.location}, {listing.country}</p>
           </div>
