@@ -116,7 +116,7 @@ module.exports.updatePreferences = async (req, res) => {
 
 // Logout API — clears the httpOnly cookie
 module.exports.logout = (req, res, next) => {
-    res.clearCookie("jwt", { httpOnly: true, sameSite: "strict", path: "/" });
+    res.clearCookie("jwt", cookieOptions);
     res.json({ message: "You have successfully logged out" });
 };
 
