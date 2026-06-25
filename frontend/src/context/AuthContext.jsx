@@ -23,34 +23,38 @@ export const AuthProvider = ({ children }) => {
   const triggerGoogleTranslate = (language) => {
     const langMap = {
       'English (US)': 'en',
+      'English (UK)': 'en',
       'Hindi (India)': 'hi',
-      'Spanish (Spain)': 'es'
+      'French (France)': 'fr',
+      'Spanish (Spain)': 'es',
+      'German (Germany)': 'de',
+      'Italian (Italy)': 'it',
+      'Portuguese (Brazil)': 'pt',
+      'Japanese (Japan)': 'ja',
+      'Korean (South Korea)': 'ko',
+      'Chinese (Simplified)': 'zh-CN',
+      'Arabic (UAE)': 'ar'
     };
     const targetCode = langMap[language] || 'en';
     
-    // Ensure cookie is set for persistence across reloads
-    if (targetCode === 'en') {
-       document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-       document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
-    } else {
-       document.cookie = `googtrans=/en/${targetCode}; path=/;`;
-       document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
-    }
+    // Check current translation state
+    const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
+    const currentCode = match ? match[1] : 'en';
 
-    // Use a polling mechanism to find the hidden select element and dispatch change
-    let attempts = 0;
-    const interval = setInterval(() => {
-      const select = document.querySelector('.goog-te-combo');
-      if (select) {
-        if (select.value !== targetCode) {
-           select.value = targetCode;
-           select.dispatchEvent(new Event('change'));
-        }
-        clearInterval(interval);
+    if (currentCode !== targetCode) {
+      if (targetCode === 'en') {
+         document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname}`;
+         document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${window.location.hostname}`;
+      } else {
+         document.cookie = `googtrans=/en/${targetCode}; path=/;`;
+         document.cookie = `googtrans=/en/${targetCode}; path=/; domain=${window.location.hostname}`;
+         document.cookie = `googtrans=/en/${targetCode}; path=/; domain=.${window.location.hostname}`;
       }
-      attempts++;
-      if (attempts > 50) clearInterval(interval); // Give up after 5 seconds
-    }, 100);
+      
+      // Auto-refresh to ensure pristine translation application without glitching
+      window.location.reload();
+    }
   };
 
   useEffect(() => {
