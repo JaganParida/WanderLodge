@@ -228,28 +228,3 @@ module.exports.resetPassword = async (req, res) => {
   }
 };
 
-// Test Email Credentials API
-module.exports.testEmail = async (req, res) => {
-  try {
-    let transporter;
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
-      });
-    } else {
-      return res.json({ status: "Error", message: "EMAIL_USER and EMAIL_PASS are not set in the environment variables." });
-    }
-
-    // Verify connection configuration
-    await transporter.verify();
-    res.json({ status: "Success", message: "SMTP connection verified! Your credentials are correct." });
-  } catch (error) {
-    res.json({ status: "Failed", error: error.message, stack: error.stack });
-  }
-};
