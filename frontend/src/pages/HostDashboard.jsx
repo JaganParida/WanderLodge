@@ -201,7 +201,7 @@ const HostDashboard = () => {
       if (profileData.email) formData.append('email', profileData.email);
       if (avatarFile) formData.append('avatar', avatarFile);
 
-      const res = await axios.put('http://localhost:8080/api/auth/profile', formData, {
+      const res = await axios.put('/api/auth/profile', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         withCredentials: true
       });

@@ -10,10 +10,11 @@ const generateToken = (user) => {
 };
 
 // Cookie options for httpOnly secure cookie
+const isProduction = process.env.NODE_ENV === "production";
 const cookieOptions = {
     httpOnly: true,       // JavaScript CANNOT access this cookie
-    secure: true, // HTTPS only (Vercel is HTTPS)
-    sameSite: "none",   // Allows cross-site cookie sending for Vercel edge/api
+    secure: isProduction, // HTTPS only in production
+    sameSite: isProduction ? "none" : "lax", // none for cross-origin production, lax for local dev
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     path: "/",
 };
@@ -61,19 +62,22 @@ module.exports.login = async (req, res) => {
 
 // Google Callback
 module.exports.googleCallback = async (req, res) => {
+  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
   try {
     const token = generateToken(req.user);
     res.cookie("jwt", token, cookieOptions);
-    res.redirect("http://localhost:5173/");
+    res.redirect(frontendUrl);
   } catch (error) {
-    res.redirect("http://localhost:5173/login?error=true");
+    res.redirect(`${frontendUrl}/login?error=true`);
   }
 };
 
 // Get current authenticated user (from cookie) gracefully to avoid 401 console errors
 module.exports.getCurrentUser = async (req, res) => {
   try {
-    const token = req.cookies?.jwt;
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+    const token = req.cookies?.jwt || bearerToken;
     if (!token) return res.json({ user: null });
 
     const jwt = require("jsonwebtoken");
@@ -173,27 +177,52 @@ module.exports.forgotPassword = async (req, res) => {
       </div>
     `;
 
-    // Make an HTTP POST to the Vercel Serverless API to send the email
-    // This safely bypasses Render's SMTP port 465 firewall!
-    fetch(`${frontendUrl}/api/send-email`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-server-api-key': process.env.SERVER_API_KEY || ''
-      },
-      body: JSON.stringify({
-        to: user.email,
-        subject: "Password Reset Request",
-        html: mailHtml
+    // Send email directly if credentials are configured in backend
+    let emailSent = false;
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      try {
+        const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+        await transporter.sendMail({
+          from: `"WanderLodge Support" <${process.env.EMAIL_USER}>`,
+          to: user.email,
+          subject: "Password Reset Request",
+          html: mailHtml,
+        });
+        emailSent = true;
+        console.log('Password reset email sent directly via Nodemailer');
+      } catch (nmErr) {
+        console.warn('Direct Nodemailer send failed, falling back to fetch:', nmErr.message);
+      }
+    }
+
+    if (!emailSent) {
+      // Fallback: Make an HTTP POST to the Vercel Serverless API
+      fetch(`${frontendUrl}/api/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-server-api-key': process.env.SERVER_API_KEY || ''
+        },
+        body: JSON.stringify({
+          to: user.email,
+          subject: "Password Reset Request",
+          html: mailHtml
+        })
       })
-    })
-    .then(res => {
-      if (!res.ok) console.error('Vercel API returned non-OK status:', res.status);
-      else console.log('Vercel API successfully dispatched email');
-    })
-    .catch(err => {
-      console.error('Failed to trigger Vercel API:', err.message);
-    });
+      .then(res => {
+        if (!res.ok) console.error('Vercel API returned non-OK status:', res.status);
+        else console.log('Vercel API successfully dispatched email');
+      })
+      .catch(err => {
+        console.error('Failed to trigger Vercel API:', err.message);
+      });
+    }
 
     res.json({ message: "An email has been sent to " + email + " with further instructions." });
   } catch (error) {

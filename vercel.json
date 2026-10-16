@@ -1,15 +1,15 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run build --prefix frontend",
+  "outputDirectory": "frontend/dist",
+  "rewrites": [
     {
-      "src": "app.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
     {
-      "src": "/(.*)",
-      "dest": "app.js"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }

@@ -8,8 +8,10 @@ const User = require("./models/user.js");
 // Check if the user is logged in via JWT httpOnly cookie
 module.exports.isLoggedIn = async (req, res, next) => {
   try {
-    // Read JWT from httpOnly cookie (not from Authorization header)
-    const token = req.cookies?.jwt;
+    // Read JWT from httpOnly cookie or Authorization Bearer header
+    const authHeader = req.headers.authorization;
+    const bearerToken = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : null;
+    const token = req.cookies?.jwt || bearerToken;
     
     if (!token) {
       return res.status(401).json({ error: "Not authorized, please log in" });

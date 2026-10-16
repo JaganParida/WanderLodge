@@ -1,3 +1,28 @@
+# Environment files (CRITICAL SECURITY: never commit secrets)
 .env
-node_modules/
+.env.*
+*.env
+backend/.env
+frontend/.env
+frontend/.env.*
 
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Production build outputs
+dist/
+frontend/dist/
+build/
+.vercel/
+
+# Logs & temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS specific files
+.DS_Store
+Thumbs.db
