@@ -5,6 +5,17 @@ const Review = require("./models/review.js");
 const jwt = require("jsonwebtoken");
 const User = require("./models/user.js");
 
+const getJwtSecret = () => {
+  const secret = process.env.SECRET || process.env.JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("CRITICAL SECURITY: SECRET or JWT_SECRET must be configured in environment.");
+    }
+    return "wanderlodge_dev_default_secret_key_2026";
+  }
+  return secret;
+};
+
 // Check if the user is logged in via JWT httpOnly cookie
 module.exports.isLoggedIn = async (req, res, next) => {
   try {
@@ -17,7 +28,7 @@ module.exports.isLoggedIn = async (req, res, next) => {
       return res.status(401).json({ error: "Not authorized, please log in" });
     }
 
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     req.user = await User.findById(decoded._id).select('-hash -salt');
     
     if (!req.user) {

@@ -38,8 +38,11 @@ app.use(
     contentSecurityPolicy: false, // SPA frontend handles its own CSP; avoids blocking Leaflet / Unsplash / Cloudinary
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: { policy: "cross-origin" },
+    xContentTypeOptions: true, // Prevents MIME-type sniffing
+    xXssProtection: true,     // Enables XSS filter
   })
 );
+app.disable("x-powered-by");
 
 // 3. NoSQL Injection Sanitization (Recursively strips dangerous $ and . operators)
 function sanitizeMongo(obj) {
@@ -82,6 +85,15 @@ const authLimiter = rateLimit({
 app.use("/api/auth/login", authLimiter);
 app.use("/api/auth/signup", authLimiter);
 app.use("/api/auth/forgot-password", authLimiter);
+app.use("/api/auth/reset-password", authLimiter);
+
+const chatbotLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30, // 30 queries per minute to protect AI quota & serverless compute
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many requests to AI concierge. Please wait a moment." },
+});
 
 // 5. CORS Configuration (Allows localhost, production domains, and *.vercel.app preview branches)
 const allowedOrigins = [
@@ -191,8 +203,10 @@ app.use(async (req, res, next) => {
 // 9. Built-in Serverless Email Handler (/api/send-email)
 const handleSendEmail = async (req, res) => {
   const apiKey = req.headers["x-server-api-key"];
-  if (process.env.SERVER_API_KEY && apiKey !== process.env.SERVER_API_KEY) {
-    return res.status(401).json({ error: "Unauthorized. Invalid API Key." });
+  const expectedKey = process.env.SERVER_API_KEY;
+  // Security Enforcement: Reject if API key is not configured or does not match
+  if (!expectedKey || apiKey !== expectedKey) {
+    return res.status(401).json({ error: "Unauthorized: Invalid or unconfigured API Key." });
   }
 
   const { to, subject, html } = req.body;
@@ -241,7 +255,7 @@ apiRouter.use("/wishlists", wishlistRouter);
 apiRouter.use("/dashboard", dashboardRouter);
 apiRouter.use("/auth", userRouter);
 apiRouter.use("/host", hostRouter);
-apiRouter.use("/chatbot", chatbotRouter);
+apiRouter.use("/chatbot", chatbotLimiter, chatbotRouter);
 
 apiRouter.get("/", (req, res) => {
   res.json({
@@ -276,7 +290,11 @@ app.use((err, req, res, next) => {
   }
 
   if (statusCode >= 500) {
-    console.error(`[Server Error ${statusCode}] ${req.method} ${req.originalUrl}:`, err);
+    console.error(`[Server Error ${statusCode}] ${req.method} ${req.originalUrl}:`, err.message || err);
+    // In production, do not leak internal system exception messages to users
+    if (process.env.NODE_ENV === "production") {
+      message = "An unexpected internal server error occurred. Please try again later.";
+    }
   }
 
   res.status(statusCode).json({ error: message });

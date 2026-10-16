@@ -4,6 +4,11 @@ const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mapToken ? mbxGeocoding({ accessToken: mapToken }) : null;
 
+// Safe regex escape helper to prevent ReDoS and pattern injection
+const escapeRegex = (text) => {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
 // Index Route API
 module.exports.index = async (req, res) => {
   try {
@@ -11,9 +16,10 @@ module.exports.index = async (req, res) => {
     let query = {};
 
     // General search or specific location search
-    const searchTerm = search || location;
+    const searchTerm = (search || location || "").trim();
     if (searchTerm) {
-      const searchRegex = new RegExp(searchTerm.trim(), "i");
+      const sanitized = escapeRegex(searchTerm);
+      const searchRegex = new RegExp(sanitized, "i");
       query.$or = [
         { title: searchRegex },
         { location: searchRegex },

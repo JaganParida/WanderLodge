@@ -7,9 +7,9 @@ if (!cached) {
 }
 
 async function connectDB() {
-  const dbUrl = process.env.ATLASDB_URL;
+  const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
   if (!dbUrl) {
-    throw new Error("ATLASDB_URL environment variable is not defined in environment.");
+    throw new Error("Database URL (ATLASDB_URL or MONGO_URL) is not defined in environment.");
   }
 
   // Re-use active connection if ready

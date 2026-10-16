@@ -51,11 +51,19 @@ module.exports.calculatePricing = async (req, res) => {
 module.exports.createBooking = async (req, res) => {
     try {
         const { id } = req.params;
-        const { checkIn, checkOut, guests, totalPrice } = req.body;
+        const { checkIn, checkOut, guests } = req.body;
 
         const listing = await Listing.findById(id);
         if (!listing) {
             return res.status(404).json({ error: "Listing not found" });
+        }
+
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        const timeDifference = checkOutDate.getTime() - checkInDate.getTime();
+        const nights = Math.ceil(timeDifference / (1000 * 3600 * 24));
+        if (nights <= 0) {
+            return res.status(400).json({ error: "Check-out must be after check-in date." });
         }
 
         const numGuests = parseInt(guests) || 1;
@@ -63,13 +71,28 @@ module.exports.createBooking = async (req, res) => {
             return res.status(400).json({ error: `Maximum guest capacity is ${listing.maxGuests || 10}.` });
         }
 
+        // Security: Calculate exact verified price on server (prevents client price tampering)
+        const basePrice = listing.price * nights * numGuests;
+        const tax = Math.round(basePrice * 0.18);
+        const serviceFee = Math.round(basePrice * 0.05);
+        const verifiedTotalPrice = basePrice + tax + serviceFee;
+
+        // Check for double-booking conflict
+        const hasConflict = listing.blockedDates && listing.blockedDates.some(blockedDate => {
+            const b = new Date(blockedDate);
+            return b >= checkInDate && b <= checkOutDate;
+        });
+        if (hasConflict) {
+            return res.status(409).json({ error: "Selected dates are no longer available. Please select different dates." });
+        }
+
         const newBooking = new Booking({
             user: req.user._id,
             listing: id,
-            checkIn: new Date(checkIn),
-            checkOut: new Date(checkOut),
-            guests: parseInt(guests),
-            totalPrice: parseInt(totalPrice),
+            checkIn: checkInDate,
+            checkOut: checkOutDate,
+            guests: numGuests,
+            totalPrice: verifiedTotalPrice,
             status: 'Confirmed'
         });
 
@@ -85,7 +108,7 @@ module.exports.createBooking = async (req, res) => {
         
         await listing.save();
 
-        res.status(201).json({ message: "Booking confirmed successfully!", bookingId: newBooking._id });
+        res.status(201).json({ message: "Booking confirmed successfully!", bookingId: newBooking._id, totalPrice: verifiedTotalPrice });
     } catch (error) {
         res.status(500).json({ error: "Failed to process booking.", details: error.message });
     }

@@ -3,8 +3,19 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+const getJwtSecret = () => {
+    const secret = process.env.SECRET || process.env.JWT_SECRET;
+    if (!secret) {
+        if (process.env.NODE_ENV === "production") {
+            throw new Error("CRITICAL SECURITY: SECRET or JWT_SECRET must be configured in environment.");
+        }
+        return "wanderlodge_dev_default_secret_key_2026";
+    }
+    return secret;
+};
+
 const generateToken = (user) => {
-    return jwt.sign({ _id: user._id, username: user.username, email: user.email, role: user.role }, process.env.SECRET, {
+    return jwt.sign({ _id: user._id, username: user.username, email: user.email, role: user.role }, getJwtSecret(), {
         expiresIn: "7d",
     });
 };
@@ -23,7 +34,8 @@ const cookieOptions = {
 module.exports.signup = async (req, res, next) => {
   try {
     let { username, email, password, role } = req.body;
-    if (!role || !["user", "host", "admin"].includes(role)) {
+    // Privilege Escalation Prevention: Public registration only permits 'user' or 'host'
+    if (!role || !["user", "host"].includes(role)) {
        role = "user";
     }
     const newUser = new User({ username, email, role });
@@ -62,7 +74,7 @@ module.exports.login = async (req, res) => {
 
 // Google Callback
 module.exports.googleCallback = async (req, res) => {
-  const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+  const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",")[0].trim() : "http://localhost:5173";
   try {
     const token = generateToken(req.user);
     res.cookie("jwt", token, cookieOptions);
@@ -80,8 +92,7 @@ module.exports.getCurrentUser = async (req, res) => {
     const token = req.cookies?.jwt || bearerToken;
     if (!token) return res.json({ user: null });
 
-    const jwt = require("jsonwebtoken");
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     
     const user = await User.findById(decoded._id);
     if (!user) return res.json({ user: null });

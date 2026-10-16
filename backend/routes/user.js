@@ -30,7 +30,10 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect: "http://localhost:5173/login?error=true" }),
+  (req, res, next) => {
+    const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",")[0].trim() : "http://localhost:5173";
+    passport.authenticate("google", { session: false, failureRedirect: `${frontendUrl}/login?error=true` })(req, res, next);
+  },
   userController.googleCallback
 );
 

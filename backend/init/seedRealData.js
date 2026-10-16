@@ -5,7 +5,11 @@ const mongoose = require('mongoose');
 const Listing = require('../models/listing');
 const User = require('../models/user');
 
-const MONGODB_URL = process.env.ATLASDB_URL || 'mongodb://127.0.0.1:27017/wanderlodge';
+const MONGODB_URL = process.env.ATLASDB_URL || process.env.MONGO_URL;
+if (!MONGODB_URL) {
+  console.error("No database URL provided in environment (ATLASDB_URL or MONGO_URL).");
+  process.exit(1);
+}
 
 main()
   .then(() => {

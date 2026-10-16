@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 const initData = require("./data.js");
 const Listing = require("../models/listing.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/WanderLodge";
+require("dotenv").config({ path: require("path").join(__dirname, "../.env") });
+const MONGO_URL = process.env.ATLASDB_URL || process.env.MONGO_URL;
+if (!MONGO_URL) {
+  console.error("No database URL provided in environment.");
+  process.exit(1);
+}
 
 main()
   .then(() => {
