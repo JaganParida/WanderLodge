@@ -7,7 +7,10 @@ if (!cached) {
 }
 
 async function connectDB() {
-  const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/WanderLodge";
+  const dbUrl = process.env.ATLASDB_URL;
+  if (!dbUrl) {
+    throw new Error("ATLASDB_URL environment variable is not defined in environment.");
+  }
 
   // Re-use active connection if ready
   if (cached.conn && mongoose.connection.readyState === 1) {
