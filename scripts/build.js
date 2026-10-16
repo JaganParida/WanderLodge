@@ -2,8 +2,11 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('--- [WanderLodge Build] Step 1: Building Vite Frontend ---');
-execSync('npm --prefix frontend run build', { stdio: 'inherit' });
+try {
+  execSync('npm run --workspace=frontend build', { stdio: 'inherit' });
+} catch (e) {
+  execSync('npm --prefix frontend run build', { stdio: 'inherit' });
+}
 
 console.log('--- [WanderLodge Build] Step 2: Preparing Root dist directory ---');
 const src = path.join(__dirname, '..', 'frontend', 'dist');
