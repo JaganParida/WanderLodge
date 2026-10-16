@@ -282,8 +282,8 @@ app.use((err, req, res, next) => {
   res.status(statusCode).json({ error: message });
 });
 
-// 13. Server Listening (Local development)
-if (process.env.NODE_ENV !== "test" && !process.env.VERCEL) {
+// 13. Server Listening (Local development standalone execution)
+if (require.main === module) {
   const PORT = process.env.PORT || 8080;
   app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);

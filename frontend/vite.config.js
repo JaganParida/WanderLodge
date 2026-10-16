@@ -7,6 +7,10 @@ export default defineConfig({
   resolve: {
     preserveSymlinks: true,
   },
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true,
+  },
   server: {
     proxy: {
       '/api': 'http://localhost:8080'
